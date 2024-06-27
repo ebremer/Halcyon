@@ -79,17 +79,25 @@ public class INIT {
     
     public Model getDefaultLinuxSettings() {
         Resource r = getDefaultSettings();
-        r.getModel().createResource(URITools.fix(Paths.get("Storage").toUri()))
-                .addProperty(RDF.type, HAL.StorageLocation)
-                .addProperty(HAL.urlpathprefix, "/Storage");
+        r
+            .addProperty(HAL.hasResourceHandler,
+                r.getModel().createResource()
+                    .addProperty(RDF.type, LDP.Container)
+                    .addProperty(HAL.resourceBase, r.getModel().createResource(HURI.of(Path.of("Storage")).toString()))
+                    .addProperty(HAL.urlPath, "/ldp")
+            );        
         return r.getModel();
     }
     
     public Model getDefaultMacOSXSettings() {
         Resource r = getDefaultSettings();
-        r.getModel().createResource(URITools.fix(Paths.get("Storage").toUri()))
-                .addProperty(RDF.type, HAL.StorageLocation)
-                .addProperty(HAL.urlpathprefix, "/Storage");
+        r
+            .addProperty(HAL.hasResourceHandler,
+                r.getModel().createResource()
+                    .addProperty(RDF.type, LDP.Container)
+                    .addProperty(HAL.resourceBase, r.getModel().createResource(HURI.of(Path.of("Storage")).toString()))
+                    .addProperty(HAL.urlPath, "/ldp")
+            );        
         return r.getModel();
     }
     

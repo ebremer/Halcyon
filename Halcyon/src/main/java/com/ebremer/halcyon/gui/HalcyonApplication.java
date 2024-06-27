@@ -85,6 +85,7 @@ public class HalcyonApplication extends WebApplication {
         mountPage("/viewall", ViewAll.class); 
         mountPage("/testviewall", TestViewAll.class); 
         mountPage("/puffin", Puffin.class); 
+        mountPage("/blank", Blank.class); 
 
         mountPage("/zephyrx", Zephyr.class);
         mountPage("/zephyrx2", Zephyr2.class);

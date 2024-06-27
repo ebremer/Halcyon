@@ -1,5 +1,6 @@
 package com.ebremer.halcyon.server;
 
+import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,14 @@ import org.pac4j.core.util.security.SecurityEndpointBuilder;
 import org.pac4j.jee.config.AbstractConfigFilter;
 import org.pac4j.jee.context.JEEFrameworkParameters;
 import java.io.IOException;
+import org.pac4j.core.client.config.BaseClientConfiguration;
 import org.pac4j.core.resource.SpringResourceHelper;
+import org.pac4j.core.resource.SpringResourceLoader;
+import org.pac4j.jee.context.session.JEESessionStore;
+import org.pac4j.oidc.client.KeycloakOidcClient;
+import org.pac4j.oidc.config.OidcConfiguration;
+import org.pac4j.oidc.profile.creator.TokenValidator;
+import org.pac4j.oidc.redirect.OidcRedirectionActionBuilder;
 
 /**
  * <p>This filter protects an URL.</p>
@@ -66,22 +74,29 @@ public class HalcyonSecurityFilter extends AbstractConfigFilter implements Secur
         this.matchers = getStringParam(filterConfig, Pac4jConstants.MATCHERS, this.matchers);
     }
 
-    /**
-     *
-     * @param request
-     * @param response
-     * @param filterChain
-     * @throws IOException
-     * @throws ServletException
-     */
     @Override
     protected final void internalFilter( final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain ) throws IOException, ServletException {
+        System.out.println("START internalFilter..........................................................");
+        TokenValidator ha;
+        //OidcRedirectionActionBuilder blah;
+        //SpringResourceLoader loaderxxx;
+        KeycloakOidcClient sss;
+        OidcConfiguration a333;
+        BaseClientConfiguration sddd;
+        OIDCProviderMetadata aaa;
+        JEESessionStore jjj;
+        SpringResourceHelper llll;
+        System.out.println("AAA");
         val config = getSharedConfig();
+        System.out.println("BBB : "+config.getSecurityLogic());
         FrameworkAdapter.INSTANCE.applyDefaultSettingsIfUndefined(config);
+        System.out.println("CCC : "+config.getSecurityLogic());
         config.getSecurityLogic().perform(config, (ctx, session, profiles) -> {
+            System.out.println("LOOP : ");
             // if no profiles are loaded, pac4j is not concerned with this request
             filterChain.doFilter(profiles.isEmpty() ? request : new HalcyonPac4JHttpServletRequestWrapper(request, profiles), response);
             return null;
         }, clients, authorizers, matchers, new JEEFrameworkParameters(request, response));
+        System.out.println("END internalFilter..........................................................");
     }
 }

@@ -33,11 +33,7 @@ import com.ebremer.halcyon.server.ldp.LDP;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.Servlet;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import javax.net.ssl.SSLSocketFactory;
-//import javax.sql.DataSource;
-import org.keycloak.federation.sssd.SSSDFederationProviderFactory;
+import javax.sql.DataSource;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +43,7 @@ import org.pac4j.oidc.client.KeycloakOidcClient;
 import org.pac4j.oidc.config.KeycloakOidcConfiguration;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -59,23 +56,23 @@ public class Main {
     private final KeycloakServer properties;
     
     @Autowired
+    private DefaultSslBundleRegistry defaultSslBundleRegistry;
+        
+    @Autowired
     private KeycloakOidcConfiguration keycloakOidcConfiguration;
         
     @Autowired
     public Main(KeycloakServer properties) {
         this.properties = properties;
-        SSSDFederationProviderFactory ha;
         KeycloakProperties.getInstance(properties.getContextPath(), properties.getUsername(), properties.getPassword());
     }
 
-    //@Autowired
-    //private DataSource dataSource;
+    @Autowired
+    private DataSource dataSource;
     
     @PostConstruct
     public void init() {
-        // Remove existing handlers attached to j.u.l root logger
         SLF4JBridgeHandler.removeHandlersForRootLogger();
-        // Add SLF4JBridgeHandler to j.u.l's root logger
         SLF4JBridgeHandler.install();
     }
     
@@ -114,8 +111,7 @@ public class Main {
         config.setRealm("Halcyon");
         config.setBaseUri(HalcyonSettings.getSettings().getProxyHostName()+"/auth");  
         if (HalcyonSettings.getSettings().isHTTPS2enabled()) {
-            SSLSocketFactory sf = SslConfig.getSslContext().getSocketFactory();
-            config.setSslSocketFactory(sf);
+            config.setSslSocketFactory(defaultSslBundleRegistry.getBundle("server").createSslContext().getSocketFactory());
         }
         return config;
     }
@@ -123,12 +119,6 @@ public class Main {
     @Bean
     public KeycloakOidcClient keycloakOidcClient() {
         return new KeycloakOidcClient(keycloakOidcConfiguration);
-    }
-
-    @Bean("fixedThreadPool")
-    @Order(Ordered.HIGHEST_PRECEDENCE)	
-    ExecutorService fixedThreadPool() {
-        return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     @Bean

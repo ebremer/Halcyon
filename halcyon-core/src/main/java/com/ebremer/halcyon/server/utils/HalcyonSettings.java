@@ -115,13 +115,12 @@ public final class HalcyonSettings {
     }
     
     public String getAuthServer() {
-        String qs = "prefix : <"+HAL.NS+"> select ?AuthServer where {?s :AuthServer ?AuthServer}";
-        Query query = QueryFactory.create(qs);
-        QueryExecution qe = QueryExecutionFactory.create(query,m);
+        ParameterizedSparqlString pss = new ParameterizedSparqlString("select ?AuthServer where {?s :AuthServer ?AuthServer}");
+        pss.setNsPrefix("", HAL.NS);
+        QueryExecution qe = QueryExecutionFactory.create(pss.toString(),m);
         ResultSet results = qe.execSelect();
         if (results.hasNext()) {
-            QuerySolution sol = results.nextSolution();
-            return sol.get("AuthServer").asLiteral().getString();
+            return results.nextSolution().get("AuthServer").asLiteral().getString();
         }
         return DEFAULTHOSTNAME+":"+DEFAULTHTTPPORT;
     }
