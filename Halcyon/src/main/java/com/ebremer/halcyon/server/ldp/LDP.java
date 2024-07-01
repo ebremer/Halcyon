@@ -4,6 +4,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
 import org.eclipse.jetty.ee10.servlet.DefaultServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +15,13 @@ public class LDP extends DefaultServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         super.doGet(request, response);
-        System.out.println(request.getRequestURI()+" ---->  "+request.getContentType());
+        logger.debug("{} ----> {}",request.getRequestURI(),request.getContentType());
     }
        
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.debug("{} ----> {}",request.getRequestURI(),request.getContentType());
+        System.out.println(JakartaServletFileUpload.isMultipartContent(request));
         switch (request.getContentType()) {
             case "text/turtle":
                 break;
@@ -29,6 +31,10 @@ public class LDP extends DefaultServlet {
                 break;
             case "application/octet-stream":
                 Utils.UploadFile(request);
+                break;
+            case "multipart/form-data":
+                System.out.println(request.getContentLengthLong());
+                System.out.println(Utils.getBody(request));
                 break;
             default:
         }
