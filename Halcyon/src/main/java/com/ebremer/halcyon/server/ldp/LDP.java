@@ -1,20 +1,15 @@
 package com.ebremer.halcyon.server.ldp;
 
-import com.ebremer.halcyon.server.utils.HalcyonSettings;
-import com.ebremer.halcyon.server.utils.PathMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.net.URI;
-import java.nio.file.Path;
-import java.util.Optional;
 import org.eclipse.jetty.ee10.servlet.DefaultServlet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LDP extends DefaultServlet {
+    private static final Logger logger = LoggerFactory.getLogger(LDP.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -24,11 +19,23 @@ public class LDP extends DefaultServlet {
        
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //System.out.println(request.getRequestURI()+" ---->  "+request.getContentType());
+        logger.debug("{} ----> {}",request.getRequestURI(),request.getContentType());
         switch (request.getContentType()) {
             case "text/turtle":
                 break;
+            case "application/json":
+                System.out.println(request.getContentLengthLong());
+                System.out.println(Utils.getBody(request));
+                break;
             case "application/octet-stream":
+                Utils.UploadFile(request);
+                break;
+            default:
+        }
+    }
+}
+
+/*
                 Optional<URI> xparent = PathMapper.getPathMapper().http2file(HalcyonSettings.getSettings().getHostName()+request.getRequestURI());
                 if (xparent.isPresent()) {
                     URI parent = xparent.get();
@@ -49,11 +56,7 @@ public class LDP extends DefaultServlet {
                             }
                         }
                     }
-                    break;
                 } else {
                     System.out.println("NOT FOUND!!!");
                 }
-            default:
-        }
-    }
-}
+*/

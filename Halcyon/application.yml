@@ -56,6 +56,7 @@ logging:
     max-history: 10
   level:
     root: ERROR
+    com.ebremer.halcyon.server.ldp: DEBUG
     #org.pac4j: DEBUG
     #com.nimbusds: DEBUG
     #com.ebremer.halcyon.fuseki.shiro: DEBUG
