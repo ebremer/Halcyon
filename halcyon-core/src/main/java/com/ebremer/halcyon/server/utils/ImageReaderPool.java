@@ -5,12 +5,15 @@ import java.net.URI;
 import java.time.Duration;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author erich
  */
 public class ImageReaderPool extends GenericKeyedObjectPool<URI, ImageReader> {
+    
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ImageReaderPool.class);
     private static ImageReaderPool pool;
 
     private ImageReaderPool(ImageReaderPoolFactory<URI, ImageReader> factory, GenericKeyedObjectPoolConfig<ImageReader> config) {
@@ -19,11 +22,13 @@ public class ImageReaderPool extends GenericKeyedObjectPool<URI, ImageReader> {
             
     @Override
     public ImageReader borrowObject(final URI key) throws Exception {
+        logger.debug("borrow: "+key);
         return super.borrowObject(key);
     }
     
     @Override
     public void returnObject(final URI key, final ImageReader obj) {
+        logger.debug("return: "+key);
         super.returnObject(key, obj);
     }
     

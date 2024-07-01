@@ -33,12 +33,12 @@ public class ImageServer extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(ListImages.class);
     
     public ImageServer() {
-        System.out.println("Starting ImageServer...");
+        logger.info("Starting ImageServer...");
     }
            
     @Override
     protected void doGet( HttpServletRequest request, HttpServletResponse response ) {
-        System.out.println(request.getRequestURI()+"?"+request.getQueryString());
+        logger.info(request.getRequestURI()+"?"+request.getQueryString());
         String iiif = request.getParameter("iiif");
         if (iiif!=null) {
             IIIFProcessor i;

@@ -7,15 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author erich
  */
 public class PathMapper {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PathMapper.class);
     private static PathMapper pathmapper = null;
     private final List<PathMap> sortByHttp;
     private final List<PathMap> sortByFile;
@@ -35,14 +35,19 @@ public class PathMapper {
     }
     
     public Optional<URI> http2file(URI uri) {
+        logger.trace("http2file: {}", uri);
         String f = uri.toString();
         if (f.startsWith(hostname)) {
             String cut = f.substring(hostname.length());
+            logger.trace("http2file/cut: {}", cut);
             for (PathMap pm : sortByHttp) {
                 String key = pm.http();
+                logger.trace("http2file/key: {}", key);
                 if (cut.startsWith(key)) {
                     String chunk = cut.substring(key.length());
+                    logger.trace("http2file/chunk: {}", uri);
                     Path wow = Path.of(pm.file().substring(1), chunk);
+                    logger.trace("http2file/wow: {}", wow);
                     return Optional.of(wow.toUri());
                 }
             }
@@ -66,16 +71,19 @@ public class PathMapper {
     }
     
     public Optional<URI> file2http(String furi) {
+        logger.debug("file2http: "+furi);
         for (PathMap pathmap : sortByFile) {
             String key = pathmap.file();
+            logger.debug("key: "+key);
             if (furi.startsWith(key)) {
                 String chunk = furi.substring(key.length()+1);
+                logger.debug("chunk: "+chunk);
                 URI uri;
                 try {
                     uri = new URI(hostname+pathmap.http()+chunk);
                     return Optional.of(uri);
                 } catch (URISyntaxException ex) {
-                    Logger.getLogger(PathMapper.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.error("Problem with converting file uri to http uri : "+furi);
                 }
             }
         }
