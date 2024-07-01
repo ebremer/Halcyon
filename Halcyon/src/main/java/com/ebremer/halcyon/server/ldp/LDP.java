@@ -1,14 +1,19 @@
 package com.ebremer.halcyon.server.ldp;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collection;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
 import org.eclipse.jetty.ee10.servlet.DefaultServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@MultipartConfig
 public class LDP extends DefaultServlet {
     private static final Logger logger = LoggerFactory.getLogger(LDP.class);
 
@@ -20,8 +25,15 @@ public class LDP extends DefaultServlet {
        
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        logger.debug("{} ----> {}",request.getRequestURI(),request.getContentType());
-        System.out.println(JakartaServletFileUpload.isMultipartContent(request));
+        logger.debug("doPost {} ----> {}",request.getRequestURI(),request.getContentType());        
+        if (JakartaServletFileUpload.isMultipartContent(request)) {
+            System.out.println("HERE "+JakartaServletFileUpload.isMultipartContent(request));
+            Collection<Part> parts = request.getParts();
+            System.out.println("BBB");
+            parts.forEach(c->{
+                System.out.println(c);
+            });
+        } else {
         switch (request.getContentType()) {
             case "text/turtle":
                 break;
@@ -32,11 +44,20 @@ public class LDP extends DefaultServlet {
             case "application/octet-stream":
                 Utils.UploadFile(request);
                 break;
-            case "multipart/form-data":
-                System.out.println(request.getContentLengthLong());
-                System.out.println(Utils.getBody(request));
-                break;
             default:
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("text/html;charset=UTF-8");
+                try (PrintWriter out = response.getWriter()) {
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Status OK</title>");
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println("<h1>All is well!</h1>");
+                    out.println("</body>");
+                    out.println("</html>");
+                }
+        }
         }
     }
 }

@@ -46,6 +46,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.web.multipart.MultipartResolver;
+import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 @SpringBootApplication(exclude = LiquibaseAutoConfiguration.class)
 @Import( {KeycloakServer.class})
@@ -90,6 +92,11 @@ public class Main {
         servlet.setLoadOnStartup(0);
         servlet.setAsyncSupported(true);
         return servlet;
+    }
+    
+    @Bean
+    MultipartResolver multipartResolver() {
+        return new StandardServletMultipartResolver();
     }
     
     @Bean(name = "keycloakSessionManagement")

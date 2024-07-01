@@ -3,6 +3,7 @@ keycloak:
     contextPath: /auth
     username: admin
     password: admin
+
 server:
   port: 8888
   http2:
@@ -11,10 +12,16 @@ server:
     bundle: server
     enabled-protocols: TLSv1.3
   servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request-size: 200MB
+      file-size-threshold: 2MB
     session:
       timeout: 900
   jetty:
     connection-idle-timeout: 900000    
+
 spring:
   main:
     lazy-initialization: false
@@ -25,7 +32,7 @@ spring:
       path: /h2
   datasource:
     username: sa
-    password:
+    password: 
     url: jdbc:h2:file:./data/keycloak;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
   jpa:
@@ -48,7 +55,8 @@ spring:
           truststore:
             location: "./halcyontruststore.jks"
             password: "password"
-            type: "JKS"            
+            type: "JKS"
+
 logging:
   file:
     name: logs/halcyon.log
@@ -65,4 +73,3 @@ logging:
     #org.jboss: OFF
     #com.ebremer.halcyon: ERROR
     #com.ebremer.beakgraph: ERROR
-    

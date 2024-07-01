@@ -1,6 +1,7 @@
 package com.ebremer.halcyon.server;
 
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
+import jakarta.servlet.MultipartConfigElement;
 import org.eclipse.jetty.server.SecureRequestCustomizer;
 import org.eclipse.jetty.server.Server;
 import org.springframework.boot.web.embedded.jetty.JettyServerCustomizer;
@@ -8,11 +9,9 @@ import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SslConnectionFactory;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.springframework.context.annotation.Bean;
 
 @Configuration
 public class JettyConfiguration implements WebServerFactoryCustomizer<JettyServletWebServerFactory> {
@@ -35,6 +34,24 @@ public class JettyConfiguration implements WebServerFactoryCustomizer<JettyServl
                     }
                 }
             }
+
+            
+            
+        };
+        factory.addServerCustomizers(jettyServerCustomizer);
+    }
+
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        System.out.println("BOOOOOOOOOOOOO!");
+        String ha = null;
+        return new MultipartConfigElement(ha);
+    }
+
+}
+
+
+
             /*
             if (HalcyonSettings.getSettings().isHTTPS2enabled()) {
                 HttpConfiguration httpConfig = new HttpConfiguration();
@@ -68,7 +85,9 @@ public class JettyConfiguration implements WebServerFactoryCustomizer<JettyServl
                 connector.setPort(HalcyonSettings.getSettings().GetHTTPSPort());
                 server.addConnector(connector);
             }*/
-        };
-        factory.addServerCustomizers(jettyServerCustomizer);
-    }
-}
+            // Configure multipart support
+//            ServletContextHandler context = new ServletContextHandler();
+  //          context.setContextPath("/");
+    //        context.setAttribute("org.eclipse.jetty.server.Request.maxFormContentSize", -1);
+      //      context.setAttribute("org.eclipse.jetty.server.Request.maxFormKeys", -1);
+        //    server.setHandler(context);   
