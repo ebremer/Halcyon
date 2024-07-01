@@ -53,6 +53,7 @@ public final class HalcyonSettings {
     public static final int DEFAULTHTTPPORT = 8888;
     public static final int DEFAULTHTTPSPORT = 9999;
     public static final int DEFAULTSPARQLPORT = 8887;
+    public static final int DEFAULTFILEPROCESSORTHREEADS = 4;
     public static final String DEFAULTHOSTNAME = "http://localhost";
     public static final String DEFAULTHOSTIP = "0.0.0.0";
     public static final String VERSION = "1.1.0";
@@ -143,6 +144,12 @@ public final class HalcyonSettings {
         return ReaderPoolScanRate;
     }
     
+    public boolean IsFileScanDisabled() {
+        ParameterizedSparqlString pss = new ParameterizedSparqlString("ask where {?s hal:fileScanDisabled true}");
+        pss.setNsPrefix("hal", HAL.NS);
+        return QueryExecutionFactory.create(pss.toString(),m).execAsk();
+    }
+    
     public static HalcyonSettings getSettings() {
         if (settings == null) {
             settings = new HalcyonSettings();
@@ -177,6 +184,18 @@ public final class HalcyonSettings {
         return null;
     }
 
+    public int GetNumberOfFileProcessorThreads() {
+        ParameterizedSparqlString pss = new ParameterizedSparqlString( "select ?threads where {?s :fileProcessors ?threads}");
+        pss.setNsPrefix("", HAL.NS);
+        QueryExecution qe = QueryExecutionFactory.create(pss.toString(),m);
+        ResultSet results = qe.execSelect();
+        if (results.hasNext()) {
+            QuerySolution sol = results.nextSolution();
+            return sol.get("threads").asLiteral().getInt();
+        }
+        return DEFAULTFILEPROCESSORTHREEADS;
+    }
+    
     public int GetSPARQLPort() {
         ParameterizedSparqlString pss = new ParameterizedSparqlString( "select ?port where {?s :SPARQLport ?port}");
         pss.setNsPrefix("", HAL.NS);

@@ -28,8 +28,6 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
 import java.util.stream.Stream;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
@@ -45,8 +43,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
@@ -66,10 +62,10 @@ public class DirectoryProcessor {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final Integer filemetaversion = 0;
     
-    public DirectoryProcessor(Dataset buffer) {
+    public DirectoryProcessor(Dataset buffer, int cores) {
         this.buffer = buffer;
-        list = GetExisting();
-        cores = 4;
+        this.list = GetExisting();
+        this.cores = cores;
     }
     
     public Model PathInfo(URI childuri) {
@@ -172,9 +168,6 @@ public class DirectoryProcessor {
                             buffer.begin(ReadWrite.WRITE);
                             buffer.addNamedModel(HAL.CollectionsAndResources, pathinfo);
                             buffer.removeNamedModel(r);
-                            System.out.println("VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV");
-                            RDFDataMgr.write(System.out, m, Lang.TURTLE);
-                            System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                             buffer.addNamedModel(r, m);
                             buffer.commit();
                             buffer.end();

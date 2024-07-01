@@ -35,19 +35,19 @@ public class PathMapper {
     }
     
     public Optional<URI> http2file(URI uri) {
-        logger.trace("http2file: {}", uri);
+        logger.trace("http2fileU: {}", uri);
         String f = uri.toString();
         if (f.startsWith(hostname)) {
             String cut = f.substring(hostname.length());
-            logger.trace("http2file/cut: {}", cut);
+            logger.trace("http2fileU/cut: {}", cut);
             for (PathMap pm : sortByHttp) {
                 String key = pm.http();
-                logger.trace("http2file/key: {}", key);
+                logger.trace("http2fileU/key: {}", key);
                 if (cut.startsWith(key)) {
                     String chunk = cut.substring(key.length());
-                    logger.trace("http2file/chunk: {}", uri);
-                    Path wow = Path.of(pm.file().substring(1), chunk);
-                    logger.trace("http2file/wow: {}", wow);
+                    logger.trace("http2fileU/chunk: {}", chunk);
+                    Path wow = Path.of(pm.file(), chunk);
+                    logger.trace("http2fileU/wow: {}", wow);
                     return Optional.of(wow.toUri());
                 }
             }
@@ -56,13 +56,18 @@ public class PathMapper {
     }
 
     public Optional<URI> http2file(String f) {
+        logger.trace("http2fileS: {}", f);
         if (f.startsWith(hostname)) {
             String cut = f.substring(hostname.length());
+            logger.trace("http2fileS/cut: {}", cut);
             for (PathMap pm : sortByHttp) {
                 String key = pm.http();
+                logger.trace("http2fileS/key: {}", key);
                 if (cut.startsWith(key)) {
                     String chunk = cut.substring(key.length());
-                    Path wow = Path.of(pm.file().substring(1), chunk);
+                    logger.trace("http2fileS/chunk: {}", chunk);
+                    Path wow = Path.of(pm.file(), chunk);
+                    logger.trace("http2fileS/wow: {}", wow);
                     return Optional.of(wow.toUri());
                 }
             }
@@ -71,19 +76,20 @@ public class PathMapper {
     }
     
     public Optional<URI> file2http(String furi) {
-        logger.debug("file2http: "+furi);
+        logger.debug("file2httpS {}", furi);
         for (PathMap pathmap : sortByFile) {
             String key = pathmap.file();
-            logger.debug("key: "+key);
+            logger.debug("file2httpS/key {}",key);
             if (furi.startsWith(key)) {
-                String chunk = furi.substring(key.length()+1);
-                logger.debug("chunk: "+chunk);
+                String chunk = furi.substring(key.length());
+                logger.debug("file2httpS/chunk {}",chunk);
                 URI uri;
                 try {
                     uri = new URI(hostname+pathmap.http()+chunk);
+                    logger.debug("file2httpS/uri {}", uri);
                     return Optional.of(uri);
                 } catch (URISyntaxException ex) {
-                    logger.error("Problem with converting file uri to http uri : "+furi);
+                    logger.error("Problem with converting file uri to http uri {}", furi);
                 }
             }
         }
