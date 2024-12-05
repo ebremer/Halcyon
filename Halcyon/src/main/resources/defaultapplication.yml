@@ -56,3 +56,4 @@ logging:
     max-history: 10
   level:
     root: ERROR
+    com.ebremer.halcyon.filesystem: INFO

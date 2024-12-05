@@ -42,13 +42,14 @@ public class ImageReaderPoolFactory<K, V> extends BaseKeyedPooledObjectFactory<U
         URI xuri = (new File(getthis)).toURI();
         logger.debug("translated "+xuri);
         switch (xuri.getScheme()) {
-            case "file":
-                String ext = FileUtils.getExtension(getthis);
+            case "file" -> {
+                String ext = FileUtils.getExtension(getthis.replace("/", ""));
                 if (FileReaderFactoryProvider.contains(ext)) {
                     return (ImageReader) FileReaderFactoryProvider.getReaderForFormat(ext).create(xuri, uri);
                 }
                 throw new Error("Don't know how to handle extensions with : "+ext);
-            default: throw new Error("don't know how to handle --> "+uri.getScheme());
+            }
+            default -> throw new Error("don't know how to handle --> "+uri.getScheme());
         }
     }
 

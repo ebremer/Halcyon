@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.jena.rdf.model.Resource;
 import com.ebremer.halcyon.lib.FileUtils;
+import java.io.File;
 import java.util.ArrayList;
 
 public class FileReaderFactoryProvider {
@@ -34,11 +35,13 @@ public class FileReaderFactoryProvider {
         }
         try {
             ArrayList<URL> list = new ArrayList<>();
-            Files.list(rootlib)
+            Files.list(rootlib)                
                 .filter(path -> Files.isRegularFile(path))
-                .filter(path -> path.toString().toLowerCase().endsWith(".jar"))
+                .filter(path -> path.toString().toLowerCase().endsWith(".jar"))                
                 .map(path -> path.toAbsolutePath())
+                .peek(path -> System.out.println("AARRRRRRRRRRRRGGGGGGGGGGGGGHH ===> "+path))
                 .forEach(p->{
+                    System.out.println("CHACHA ---> "+p);
                     URI uri = p.toUri();
                     try {
                         list.add(uri.toURL());
@@ -54,6 +57,7 @@ public class FileReaderFactoryProvider {
             ServiceLoader<FileReaderFactory> loaderx = ServiceLoader.load(FileReaderFactory.class, classLoader);
             for (FileReaderFactory impl : loaderx) {
                 impl.getSupportedFormats().forEach(f->{
+                    System.out.println("GET LOADER ====> "+f);
                     readersMap.put(f, impl);
                 });
             }
@@ -77,15 +81,19 @@ public class FileReaderFactoryProvider {
     }
 
     public static boolean hasReaderFor(Path iri) {
-        return contains(FileUtils.getExtension(iri.toString()));
+        File ww = iri.toFile();
+        String gg = ww.toString();
+        String ext = FileUtils.getExtension(gg);
+        return contains(ext);
     }
     
     public static FileReaderFactory getReaderForFormat(Resource iri) {
         System.out.println(iri.getURI());
-        readersMap.forEach((k,v)->{
-            System.out.println("reader --> "+k+"  "+v.getClass().toGenericString());
-        });      
-        return getReaderForFormat(FileUtils.getExtension(iri.getURI()));
+        //readersMap.forEach((k,v)->{
+          //  System.out.println("reader --> "+k+"  "+v.getClass().toGenericString());
+        //});      
+        String za = iri.getURI().replace("/", "");
+        return getReaderForFormat(FileUtils.getExtension(za));
     }
     
     public static FileReaderFactory getReaderForFormat(String format) {

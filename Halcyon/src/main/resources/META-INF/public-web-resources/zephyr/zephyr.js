@@ -172,6 +172,12 @@ function AddImageViewer(group, url, offset) {
       lod.frustrumCulled = false;
       lod.scale.x = w;
       lod.scale.y = w;
+      
+      lod.onBeforeRender = function (renderer, scene, camera, geometry, material, group) {
+            console.log('Object is about to be rendered');
+            material.color.set(Math.random() * 0xffffff);
+      };
+      
       group.add(lod);
       lod.position.z = offset;
     }).catch(error => console.error('Error fetching data:', error));
@@ -413,6 +419,19 @@ class FeatureViewer extends LOD {
         } else {
             //  console.log(this.level+ "No LOD level is currently visible.");
         }
+    }
+}
+
+class StackViewer extends Object3D {
+    
+    constructor() {
+        super();
+        this.type = 'StackViewer';
+        this.spacing = 1.0;
+    }
+    
+    setSpacing( value ) {
+        this.spacing = value;
     }
 }
 

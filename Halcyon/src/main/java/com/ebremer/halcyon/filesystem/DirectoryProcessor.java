@@ -24,13 +24,12 @@ import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import static java.util.stream.Collectors.toList;
-import java.util.stream.Stream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ParameterizedSparqlString;
@@ -48,6 +47,7 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SchemaDO;
+import org.apache.jena.vocabulary.XSD;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -87,60 +87,65 @@ public class DirectoryProcessor {
     }
 
     public void Traverse(Path src) {
-        try {
-            Stream<Path> yay = Files.walk(src);
-            ForkJoinPool fjp = null;
-            try {
-                fjp = new ForkJoinPool(cores);
-                fjp.submit(()->yay.collect(toList()).parallelStream()
-                    .filter(Objects::nonNull)
-                    .filter(fff -> fff.toFile().isFile())                     
-                    .filter(fx->{
-                        logger.trace("Processing {}", fx);
-                        Optional<URI> rrz = PathMapper.getPathMapper().file2http(fx.toUri());                        
-                        if (rrz.isPresent()) {
-                            Resource target = ResourceFactory.createResource(rrz.get().toString());
-                            if (list.containsKey(target)) {
-                                return fx.toFile().lastModified() != list.get(target).fileLastModified();
-                            } else {
-                                return true;
-                            } 
-                        }
-                        logger.error("Mapping not found for {}",fx.toString());
-                        return false;
-                    })
-                    .filter(fff->FileReaderFactoryProvider.hasReaderFor(fff))
-                    .forEach(fx -> {                        
-                        Optional<URI> rrz = PathMapper.getPathMapper().file2http(fx.toUri());
-                        URI httpuri;                       
-                        if (rrz.isPresent()) {
-                            httpuri = rrz.get();
-                        } else {
-                            throw new Error("ACK!!!!");
-                        }                        
-                        logger.info("Processing ---> "+fx+"  "+httpuri.toString());
-                        Model m = ModelFactory.createDefaultModel();
-                        Resource r = m.createResource(httpuri.toString());
-                        r
-                            .addProperty(RDF.type, LDP.NonRDFSource)
-                            .addProperty(RDF.type, SchemaDO.ImageObject)
-                            .addProperty(OWL.sameAs, m.createResource(HURI.of(fx).toString()));
-                        File file = fx.toFile();
-                        FileReaderFactory frf = FileReaderFactoryProvider.getReaderForFormat(r);
-                        logger.trace("Reader {}", frf);
-                        try (FileReader fr = frf.create(fx.toUri(), httpuri)){
-                            Model xxx = fr.getMeta(httpuri);
-                            m.add(xxx);
-                            if (fr instanceof ImageReader) {
-                                m.add(r, SchemaDO.fileFormat, FileUtils.getExtension(fr.getFormat()));
+        try (ForkJoinPool fjp = new ForkJoinPool(cores)) {
+            fjp.submit(()->{
+                try {
+                    Files.walk(src)
+                        .parallel()                  
+                        .filter(fx->{
+                            logger.trace("Processing {}", fx);
+                            Optional<URI> rrz = PathMapper.getPathMapper().file2http(fx.toUri());
+                            if (rrz.isPresent()) {
+                                Resource target = ResourceFactory.createResource(rrz.get().toString());
+                                if (list.containsKey(target)) {
+                                    return fx.toFile().lastModified() != list.get(target).fileLastModified();
+                                } else {
+                                    return true;
+                                }
                             }
-                            m.addLiteral(r, HAL.validFile, true);
-                        } catch (Exception ex) {
-                            logger.trace("WHAT?!?! {} {}", fx, ex.getMessage());
-                            m.addLiteral(r, HAL.validFile, false);
-                            m.addLiteral(r, HAL.filemetaversion, filemetaversion);
-                        }
-                        Model pathinfo;
+                            logger.error("Mapping not found for {}",fx.toString());
+                            return false;
+                        })                        
+                        .filter(fff->FileReaderFactoryProvider.hasReaderFor(fff))
+                        .forEach(fx -> {
+                            Optional<URI> rrz = PathMapper.getPathMapper().file2http(fx.toUri());
+                            URI httpuri;
+                            
+                            if (fx.toString().endsWith(".zarr")) {
+                                int x = 0;
+                                System.out.println("BOOYAH!!! "+fx.toString());
+                            } else {
+                                System.out.println("NYET!!! "+fx.toString());
+                            }
+                            
+                            if (rrz.isPresent()) {
+                                httpuri = rrz.get();
+                            } else {
+                                throw new Error("ACK!!!!");
+                            }
+                            logger.info("Processing ---> "+fx+"  "+httpuri.toString());
+                            Model m = ModelFactory.createDefaultModel();
+                            Resource r = m.createResource(httpuri.toString());
+                            r
+                                .addProperty(RDF.type, LDP.NonRDFSource)
+                                .addProperty(RDF.type, SchemaDO.ImageObject)
+                                .addProperty(OWL.sameAs, m.createResource(HURI.of(fx).toString()));
+                            File file = fx.toFile();
+                            FileReaderFactory frf = FileReaderFactoryProvider.getReaderForFormat(r);
+                            logger.trace("Reader {}", frf);
+                            try (FileReader fr = frf.create(fx.toUri(), httpuri)){
+                                Model xxx = fr.getMeta(httpuri);
+                                m.add(xxx);
+                                if (fr instanceof ImageReader) {
+                                    m.add(r, SchemaDO.fileFormat, FileUtils.getExtension(fr.getFormat()));
+                                }
+                                m.addLiteral(r, HAL.validFile, true);
+                            } catch (Exception ex) {
+                                logger.trace("WHAT?!?! {} {}", fx, ex.getMessage());
+                                m.addLiteral(r, HAL.validFile, false);
+                                m.addLiteral(r, HAL.filemetaversion, m.createTypedLiteral(filemetaversion, XSD.integer.getURI()));
+                            }
+                            Model pathinfo;
                             ZonedDateTime dateTime = ZonedDateTime.now();
                             dateTime.format(formatter);
                             Literal dateLiteral = m.createTypedLiteral(dateTime.format(formatter), XSDDatatype.XSDdateTime);
@@ -152,8 +157,7 @@ public class DirectoryProcessor {
                             m.add(r,HAL.halcyonVersion, HalcyonSettings.VERSION);
                             m.addLiteral(r, HAL.fileLastModified, file.lastModified());
                             long now = System.nanoTime();
-                            Hashes hashes;
-                            
+                            Hashes hashes;                                    
                             try {
                                 hashes = HashTools.calculateHashes(file);
                                 m.add(r,LOC.md5,hashes.MD5());
@@ -175,17 +179,14 @@ public class DirectoryProcessor {
                             buffer.addNamedModel(r, m);
                             buffer.commit();
                             buffer.end();
-                        System.out.println("Processed : "+r);
-                    })
-                ).get();
-            } catch (InterruptedException | ExecutionException ex) {
-                logger.error(ex.toString());
-            } finally {
-                if (fjp != null) {
-                    fjp.shutdown();
+                            System.out.println("Processed : "+r);
+                        });
+                } catch (IOException ex) {
+                    Logger.getLogger(DirectoryProcessor.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        } catch (IOException ex) {
+            ).get();
+        } catch (InterruptedException | ExecutionException ex) {
             logger.error(ex.toString());
         }
     }

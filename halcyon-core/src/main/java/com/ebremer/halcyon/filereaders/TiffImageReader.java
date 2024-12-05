@@ -121,10 +121,10 @@ public class TiffImageReader extends AbstractImageReader {
         m.setNsPrefix("hal", HAL.NS);
         m.setNsPrefix("xsd", XSD.getURI());
         Resource root = m.createResource(URITools.fix(xuri))                
-            .addLiteral(HAL.filemetaversion, (Integer) METAVERSION)
-            .addLiteral(EXIF.width, meta.getWidth())
-            .addLiteral(EXIF.height, meta.getHeight())
-            .addProperty(RDF.type, SchemaDO.ImageObject);        
+            .addLiteral(HAL.filemetaversion, m.createTypedLiteral( METAVERSION, XSD.integer.getURI()))
+            .addLiteral(EXIF.width, m.createTypedLiteral(meta.getWidth(), XSD.integer.getURI()))
+            .addLiteral(EXIF.height, m.createTypedLiteral(meta.getHeight(), XSD.integer.getURI()))
+            .addProperty(RDF.type, SchemaDO.ImageObject);    
         TIFFImageReader rr = (TIFFImageReader) reader;        
         TIFFImageMetadata td;
         try {
