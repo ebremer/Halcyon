@@ -138,17 +138,17 @@ function getRandomNumberBetween(a, b) {
 
 function CreateStackViewer(renderer, scene, urls, offset) {
     console.log("CreateStackViewer : "+urls+" offset -> "+offset);
-    var group = new Group();
+    var stackviewer = new StackViewer();
     var off = offset;
     urls.forEach((url) => {
         console.log(url);        
-        AddImageViewer(group, url, off);
+        AddImageViewer(stackviewer, url, off);
         off = off + 2000;
     });
-    scene.add(group);
-    group.position.x = 5000;
-    group.position.y = 5000;
-    group.position.z = 5000;
+    scene.add(stackviewer);
+    stackviewer.position.x = 5000;
+    stackviewer.position.y = 5000;
+    stackviewer.position.z = 5000;
 }
 
 function AddImageViewer(group, url, offset) {
@@ -424,14 +424,42 @@ class FeatureViewer extends LOD {
 
 class StackViewer extends Object3D {
     
+    createUX() {
+        let myDiv = document.createElement("div");
+        myDiv.style.width = '100%';
+        myDiv.style.color = 'lightblue';
+        myDiv.style.margin = '0';
+        let canvas = document.querySelector('canvas');
+        document.body.insertBefore(myDiv, canvas);
+                
+        let slider = document.createElement("input");
+        slider.id = "slider123";
+        slider.type = "range";
+        slider.min = "1";
+        slider.value = 10;
+        slider.max = "100";
+        slider.classList.add("annotationBtn");
+        slider.addEventListener('input', (event) => {
+            console.log(`Final value selected: ${event.target.value}`);
+            this.scale.z = (event.target.value / 10);
+        });    
+        myDiv.appendChild(slider);
+        console.log("StackViewer ID : "+this.id);
+    }
+    
     constructor() {
         super();
         this.type = 'StackViewer';
-        this.spacing = 1.0;
+        this.spacing = 1.0;        
+        this.createUX();
     }
     
     setSpacing( value ) {
         this.spacing = value;
+    }
+    
+    addLayer( object ) {
+        
     }
 }
 
