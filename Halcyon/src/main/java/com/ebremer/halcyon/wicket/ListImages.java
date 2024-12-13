@@ -1,13 +1,13 @@
 package com.ebremer.halcyon.wicket;
 
-import com.ebremer.ethereal.LDModel;
-import com.ebremer.ethereal.RDFDetachableModel;
-import com.ebremer.ethereal.RDFRenderer;
-import com.ebremer.ethereal.SelectDataProvider;
-import com.ebremer.ethereal.Solution;
+import com.ebremer.vandegraaph.LDModel;
+import com.ebremer.vandegraaph.RDFDetachableModel;
+import com.ebremer.vandegraaph.RDFRenderer;
+import com.ebremer.vandegraaph.SelectDataProvider;
+import com.ebremer.vandegraaph.Solution;
 import com.ebremer.halcyon.datum.Patterns;
 import com.ebremer.ns.HAL;
-import com.ebremer.ethereal.NodeColumn;
+import com.ebremer.vandegraaph.NodeColumn;
 import com.ebremer.halcyon.data.DataCore;
 import static com.ebremer.halcyon.data.DataCore.Level.OPEN;
 import com.ebremer.halcyon.datum.HalcyonPrincipal;

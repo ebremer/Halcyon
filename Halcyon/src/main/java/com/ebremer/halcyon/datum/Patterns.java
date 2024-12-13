@@ -1,7 +1,7 @@
 package com.ebremer.halcyon.datum;
 
 import com.ebremer.halcyon.data.DataCore;
-import com.ebremer.ethereal.MakeList;
+import com.ebremer.vandegraaph.MakeList;
 import com.ebremer.ns.HAL;
 import com.ebremer.ns.LDP;
 import java.util.List;

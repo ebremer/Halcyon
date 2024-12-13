@@ -1,8 +1,8 @@
 package com.ebremer.halcyon.gui;
 
 import com.ebremer.halcyon.data.DataCore;
-import com.ebremer.halcyon.puffin.CommandNode;
-import com.ebremer.halcyon.puffin.SHACLForm;
+import com.ebremer.vandegraaph.puffin.CommandNode;
+import com.ebremer.vandegraaph.puffin.SHACLForm;
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.wicket.BasePage;
 import com.ebremer.ns.HAL;

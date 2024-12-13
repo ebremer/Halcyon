@@ -1,7 +1,7 @@
 package com.ebremer.halcyon.gui.tree;
 
-import com.ebremer.ethereal.xNode;
-import com.ebremer.ethereal.xNodePropertyModel;
+import com.ebremer.vandegraaph.xNode;
+import com.ebremer.vandegraaph.xNodePropertyModel;
 import com.ebremer.ns.HAL;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.rdf.model.Model;
