@@ -12,7 +12,7 @@ import com.apicatalog.jsonld.processor.FromRdfProcessor;
 import com.apicatalog.rdf.RdfDataset;
 import com.ebremer.halcyon.data.DataCore;
 import com.ebremer.halcyon.lib.OperatingSystemInfo;
-import com.ebremer.vandegraaph.shacl.HShapesSPARQL;
+import com.ebremer.vandegraph.shacl.HShapesSPARQL;
 import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.halcyon.utils.HalJsonLD;
 import com.ebremer.ns.HAL;

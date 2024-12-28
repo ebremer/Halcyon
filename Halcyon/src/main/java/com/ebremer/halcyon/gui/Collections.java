@@ -1,11 +1,11 @@
 package com.ebremer.halcyon.gui;
 
-import com.ebremer.vandegraaph.SelectDataProvider;
+import com.ebremer.vandegraph.SelectDataProvider;
 import com.ebremer.halcyon.wicket.BasePage;
 import com.ebremer.halcyon.wicket.ListFeatures;
-import com.ebremer.vandegraaph.Solution;
+import com.ebremer.vandegraph.Solution;
 import com.ebremer.halcyon.wicket.DatabaseLocator;
-import com.ebremer.vandegraaph.NodeColumn;
+import com.ebremer.vandegraph.NodeColumn;
 import com.ebremer.halcyon.data.DataCore;
 import com.ebremer.halcyon.datum.HalcyonFactory;
 import com.ebremer.halcyon.wicket.Upload;

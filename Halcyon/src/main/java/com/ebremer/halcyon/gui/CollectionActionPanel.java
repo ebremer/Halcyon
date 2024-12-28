@@ -1,6 +1,6 @@
 package com.ebremer.halcyon.gui;
 
-import com.ebremer.vandegraaph.Solution;
+import com.ebremer.vandegraph.Solution;
 import com.ebremer.halcyon.data.DataCore;
 import com.ebremer.halcyon.datum.Patterns;
 import com.ebremer.halcyon.pools.AccessCachePool;

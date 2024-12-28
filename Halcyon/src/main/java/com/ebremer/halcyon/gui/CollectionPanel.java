@@ -1,7 +1,7 @@
 package com.ebremer.halcyon.gui;
 
-import com.ebremer.vandegraaph.LDModel;
-import com.ebremer.vandegraaph.RDFTextField;
+import com.ebremer.vandegraph.LDModel;
+import com.ebremer.vandegraph.RDFTextField;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDFS;
