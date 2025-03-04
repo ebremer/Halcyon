@@ -59,6 +59,7 @@ public final class HalcyonSettings {
     public static final int DEFAULTHTTPPORT = 8888;
     public static final int DEFAULTHTTPSPORT = 9999;
     public static final int DEFAULTSPARQLPORT = 8887;
+    public static final int DEFAULTKEYCLOAKPORT = 8080;
     public static final int DEFAULTFILEPROCESSORTHREEADS = 4;
     public static final String DEFAULTHOSTNAME = "http://localhost";
     public static final String DEFAULTHOSTIP = "0.0.0.0";
