@@ -43,29 +43,19 @@ public class TiffImageReader extends AbstractImageReader {
     public TiffImageReader(URI uri, URI base) throws IOException {
         this.uri = uri;
         File file = new File(uri);
-        System.out.println("TIFF READER FOR ====> "+file.toString());
-        if (file.toString().contains("Stack2")) {
-            int cc = 0;
-        }
         ImageInputStream input = ImageIO.createImageInputStream(file);
         Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
-        readers.forEachRemaining(rr->{
-            System.out.println("TIF READERS : "+rr.getClass().toGenericString());
-        });
         readers = ImageIO.getImageReadersByFormatName("tif");
         javax.imageio.ImageReader ir = null;
         while (readers.hasNext()) {
             ir = readers.next();
-            System.out.println("IMAGE CLASS --> "+ir.getClass().getCanonicalName());
             if ("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader".equals(ir.getClass().getCanonicalName())) {
-                System.out.println("YES! : "+ir.getClass().getCanonicalName());
                 reader = ir;
             }
         }
         if (ir==null) {
             throw new IllegalArgumentException("No reader for: " + file);
         }
-        System.out.println("READER IS ---> "+reader.getClass().getCanonicalName());
         reader.setInput(input);            
         ImageMeta.Builder builder = ImageMeta.Builder.getBuilder(0, reader.getWidth(0), reader.getHeight(0))
             .setTileSizeX(reader.getTileWidth(0))
