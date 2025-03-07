@@ -133,18 +133,10 @@ public class INIT {
         // OS Specific Settings        
         File settings = new File("settings.ttl");
         switch (OperatingSystemInfo.getName()) {
-                case "Windows 11":
-                case "Windows 10":
-                    CreateDefaultSettingsFile(settings,getDefaultWindowsSettings());
-                    break;
-                case "Linux":
-                    CreateDefaultSettingsFile(settings,getDefaultLinuxSettings());
-                    break;
-                case "Mac OS X":
-                    CreateDefaultSettingsFile(settings,getDefaultMacOSXSettings());
-                    break;
-                default:
-                    throw new Error("What Operating System are you running?!  Sorry, but Halcyon does not support it right now...");
+            case "Windows 11", "Windows 10" -> CreateDefaultSettingsFile(settings,getDefaultWindowsSettings());
+            case "Linux" -> CreateDefaultSettingsFile(settings,getDefaultLinuxSettings());
+            case "Mac OS X" -> CreateDefaultSettingsFile(settings,getDefaultMacOSXSettings());
+            default -> throw new Error("What Operating System are you running?!  Sorry, but Halcyon does not support it right now...");
         }
         
         // ensure all TiffReaders are loaded

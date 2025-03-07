@@ -38,7 +38,7 @@ public class Cool {
     public HalcyonSessionListener httpSessionListener() {
         return new HalcyonSessionListener();
     }
-    
+   
     @Bean
     public Config config() {
         final KeycloakOidcConfiguration keyconfig = new KeycloakOidcConfiguration();

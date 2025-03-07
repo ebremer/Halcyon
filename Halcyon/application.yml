@@ -26,22 +26,14 @@ spring:
   main:
     lazy-initialization: false
     allow-circular-references: true
-  h2:
-    console:
-      enabled: false
-      path: /h2
   datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
     username: sa
     password: 
-    url: jdbc:h2:file:./data/keycloak;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-  jpa:
-    defer-datasource-initialization: true
-    properties:
-      hibernate:
-        transaction:
-          jta:
-            platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
+  h2:
+    console:
+      enabled: true    
   ssl:
     bundle:
       jks:

@@ -5,27 +5,17 @@ import com.ebremer.halcyon.services.ServicesLoader;
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.filereaders.FileReaderFactoryProvider;
 import com.ebremer.halcyon.imagebox.ImageServer;
-import com.ebremer.halcyon.server.keycloak.RequestFilter;
-import com.ebremer.halcyon.server.keycloak.providers.SimplePlatformProvider;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
-import org.jboss.resteasy.plugins.server.servlet.ResteasyContextParameters;
-import org.keycloak.platform.Platform;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.core.annotation.Order;
 import com.ebremer.halcyon.fuseki.HalcyonProxyServlet;
 import com.ebremer.halcyon.fuseki.SPARQLEndPoint;
 import com.ebremer.halcyon.lib.OperatingSystemInfo;
@@ -37,7 +27,6 @@ import jakarta.servlet.Servlet;
 import java.util.Iterator;
 import java.util.UUID;
 import javax.imageio.ImageIO;
-import javax.sql.DataSource;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,13 +43,10 @@ import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
 @SpringBootApplication(exclude = LiquibaseAutoConfiguration.class)
-@Import({KeycloakServer.class})
-@EnableConfigurationProperties(KeycloakServer.class)
 @ConfigurationPropertiesScan({"com.ebremer.halcyon.server"})
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
-    private final KeycloakServer properties;
 
     @Autowired
     private DefaultSslBundleRegistry defaultSslBundleRegistry;
@@ -68,35 +54,10 @@ public class Main {
     @Autowired
     private KeycloakOidcConfiguration keycloakOidcConfiguration;
 
-    @Autowired
-    public Main(KeycloakServer properties) {
-        this.properties = properties;
-        KeycloakProperties.getInstance(properties.getContextPath(), properties.getUsername(), properties.getPassword());
-    }
-
-    @Autowired
-    private DataSource dataSource;
-
     @PostConstruct
     public void init() {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
-    }
-
-    @Bean(name = "xapp")
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @Lazy(false)
-    @DependsOn("keycloakServer")
-    ServletRegistrationBean<HttpServlet30Dispatcher> keycloakJaxRsApplication() throws Exception {
-        System.out.println("Add Keycloak Server Filter..." + properties);
-        final var servlet = new ServletRegistrationBean<HttpServlet30Dispatcher>(new HttpServlet30Dispatcher());
-        servlet.addInitParameter("jakarta.ws.rs.Application", App.class.getName());
-        servlet.addInitParameter(ResteasyContextParameters.RESTEASY_SERVLET_MAPPING_PREFIX, properties.getContextPath());
-        servlet.addInitParameter(ResteasyContextParameters.RESTEASY_USE_CONTAINER_FORM_PARAMS, "true");
-        servlet.addUrlMappings(properties.getContextPath() + "/*");
-        servlet.setLoadOnStartup(0);
-        servlet.setAsyncSupported(true);
-        return servlet;
     }
 
     @Bean
@@ -104,6 +65,7 @@ public class Main {
         return new StandardServletMultipartResolver();
     }
 
+    /*
     @Bean(name = "keycloakSessionManagement")
     @Order(Ordered.HIGHEST_PRECEDENCE)
     FilterRegistrationBean<RequestFilter> keycloakSessionManagement() {
@@ -115,6 +77,7 @@ public class Main {
         filter.addUrlPatterns(properties.getContextPath() + "/*");
         return filter;
     }
+*/
 
     @Bean
     public KeycloakOidcConfiguration keycloakOidcConfiguration() {
@@ -122,6 +85,7 @@ public class Main {
         config.setClientId("account");
         config.setRealm("Halcyon");
         config.setBaseUri(HalcyonSettings.getSettings().getProxyHostName() + "/auth");
+        //config.setBaseUri(HalcyonSettings.getSettings().getProxyHostName());
         if (HalcyonSettings.getSettings().isHTTPS2enabled()) {
             config.setSslSocketFactory(defaultSslBundleRegistry.getBundle("server").createSslContext().getSocketFactory());
         }
@@ -131,13 +95,6 @@ public class Main {
     @Bean
     public KeycloakOidcClient keycloakOidcClient() {
         return new KeycloakOidcClient(keycloakOidcConfiguration);
-    }
-
-    @Bean
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @ConditionalOnMissingBean(name = "springBootPlatform")
-    protected SimplePlatformProvider springBootPlatform() {
-        return (SimplePlatformProvider) Platform.getPlatform();
     }
 
     @Lazy(true)
@@ -180,6 +137,20 @@ public class Main {
         bean.addInitParameter("targetUri", "http://localhost:" + settings.GetSPARQLPort() + "/rdf");
         bean.addInitParameter(ProxyServlet.P_PRESERVECOOKIES, "true");
         bean.addInitParameter(ProxyServlet.P_HANDLEREDIRECTS, "true");
+        bean.setOrder(5);
+        return bean;
+    }
+
+    @Bean
+    public ServletRegistrationBean proxyServletKeycloakRegistrationBean() {
+        ServletRegistrationBean bean = new ServletRegistrationBean(new HalcyonProxyServlet(), "/auth/*");
+        bean.addInitParameter("targetUri", "http://localhost:8080/auth");
+        //bean.addInitParameter("targetUri", "https://ebremer.com/auth");
+        bean.addInitParameter(ProxyServlet.P_PRESERVECOOKIES, "true");
+        bean.addInitParameter(ProxyServlet.P_HANDLEREDIRECTS, "true");
+        bean.addInitParameter(ProxyServlet.P_FORWARDEDFOR, "false");
+        bean.addInitParameter(ProxyServlet.P_PRESERVEHOST, "true");
+        bean.addInitParameter(ProxyServlet.P_LOG, "true");
         bean.setOrder(5);
         return bean;
     }

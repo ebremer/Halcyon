@@ -196,6 +196,11 @@ public final class HalcyonSession extends WebSession {
             m.add(m.createLiteralStatement(s, SchemaDO.email,jo.getString("email")));
         }
         m.add(s, RDF.type, SchemaDO.Person);
+        
+        //jo.keySet().forEach(k->{
+//            System.out.println(k+" ---------- "+jo.getString(k));
+  //      });
+        
         if (jo.containsKey("attributes")) {
             JsonObject attributes = jo.getJsonObject("attributes");
             if (attributes.containsKey("webid")) {

@@ -1,10 +1,12 @@
 package com.ebremer.halcyon.fuseki;
 
-import java.io.IOException;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.keycloak.KeycloakSecurityContext;
+import java.io.IOException;
+import java.util.Arrays;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
 
 /**
@@ -12,23 +14,46 @@ import org.mitre.dsmiley.httpproxy.ProxyServlet;
  * @author erich
  */
 public class HalcyonProxyServlet extends ProxyServlet {
-    
-    private KeycloakSecurityContext getKeycloakSecurityContext(HttpServletRequest request) {
-        return (KeycloakSecurityContext) request.getAttribute(KeycloakSecurityContext.class.getName());
-    } 
+
+    @Override
+    protected void copyRequestHeaders(HttpServletRequest servletRequest, HttpRequest proxyRequest) {
+        super.copyRequestHeaders(servletRequest, proxyRequest);
+        
+        proxyRequest.removeHeaders("X-Forwarded-For");
+        proxyRequest.removeHeaders("X-Forwarded-Proto");
+        proxyRequest.removeHeaders("X-Forwarded-Host");        
+        proxyRequest.removeHeaders("Access-Control-Allow-Headers");
+        
+        proxyRequest.addHeader("X-Forwarded-For", servletRequest.getRemoteAddr());
+        proxyRequest.addHeader("X-Forwarded-Proto", "https");        
+        proxyRequest.addHeader("X-Forwarded-Host", "localhost");
+        proxyRequest.addHeader("X-Forwarded-Port", "8888");
+        proxyRequest.addHeader("Access-Control-Allow-Origin", "*");
+        proxyRequest.addHeader("Access-Control-Allow-Headers", "Content-type, Authorization, X-Requested-With, DPop");
+    }    
     
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.service(request, response);
-        /*
-        KeycloakSecurityContext securityContext = getKeycloakSecurityContext(request);
-        String token = securityContext.getIdTokenString();
-        HashMap<String,String> list = new HashMap<>();
-        list.put("token", token);
-        System.out.println("======================================================================");
-        System.out.println(token);
-        System.out.println("======================================================================");
-*/
-        //super.service(new AddParamsToHeader(request), response);
+    protected String rewritePathInfoFromRequest(HttpServletRequest servletRequest) {
+        String wow = servletRequest.getPathInfo();
+        return wow;
     }
+    
+    @Override
+    protected HttpResponse doExecute(HttpServletRequest servletRequest, HttpServletResponse servletResponse, HttpRequest proxyRequest) throws IOException {
+        System.out.println(servletRequest);
+        /*
+        servletRequest.getHeaderNames().asIterator().forEachRemaining(h->{
+            System.out.println("SH : "+h+" --> "+servletRequest.getHeader(h));
+        });
+        Arrays.stream(proxyRequest.getAllHeaders()).forEach(h->{
+            System.out.println("pH : "+h.getName()+" --> "+h.getValue());
+        });    */ 
+        System.out.println(
+                "proxy   : " + servletRequest.getMethod()
+            + "\nuri     : " + servletRequest.getRequestURI()
+            + "\nRLINE   : " + proxyRequest.getRequestLine().getUri());
+        HttpHost host = getTargetHost(servletRequest);
+        HttpResponse rrr = this.getProxyClient().execute(host, proxyRequest);
+        return rrr;
+  }
 }

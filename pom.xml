@@ -78,19 +78,14 @@
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.longClasspath>true</exec.longClasspath>
-        <springboot.version>3.3.1</springboot.version>
-        <keycloak.version>24.0.5</keycloak.version>        
-	<infinispan.version>15.0.5.Final</infinispan.version>
+        <springboot.version>3.3.9</springboot.version>
 	<resteasy.version>6.2.9.Final</resteasy.version>
-	<liquibase.version>4.27.0</liquibase.version>
-        <micrometer.version>1.13.1</micrometer.version>  <!--1.10.-->
-        <jetty.version>12.0.10</jetty.version>
-        <h2.version>2.2.224</h2.version>
+        <jetty.version>12.0.16</jetty.version>
         <jena.version>5.3.0</jena.version>
         <wicket.ver>10.3.0</wicket.ver>
         <beakgraph.version>0.9.0</beakgraph.version>        
         <hilbert.ver>0.2.3</hilbert.ver>
-        <commons-pool2.ver>2.12.0</commons-pool2.ver>
+        <commons-pool2.ver>2.12.1</commons-pool2.ver>
         <jakarta.json.version>2.0.1</jakarta.json.version> 
         <parrson.json.version>1.1.6</parrson.json.version>
         <titanium-json-ld.ver>1.4.0</titanium-json-ld.ver>
@@ -166,59 +161,9 @@
                 <version>${jena.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.micrometer</groupId>
-                <artifactId>micrometer-registry-prometheus</artifactId>
-                <version>${micrometer.version}</version>
-            </dependency>            
-            <dependency>
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>3.1.8</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-core</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-api</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-cachestore-remote</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-client-hotrod</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-commons</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-jboss-marshalling</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-multimap</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-query-dsl</artifactId>
-                <version>${infinispan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.infinispan</groupId>
-                <artifactId>infinispan-remote-query-client</artifactId>
-                <version>${infinispan.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -230,21 +175,6 @@
                 <groupId>com.twelvemonkeys.imageio</groupId>
                 <artifactId>imageio-tiff</artifactId>
                 <version>${twelvemonkeys.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.liquibase</groupId>
-                <artifactId>liquibase-core</artifactId>
-                <version>${liquibase.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.yaml</groupId>
-                        <artifactId>snakeyaml</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-text</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.apicatalog</groupId>

@@ -73,17 +73,11 @@ public class ImageServer extends HttpServlet {
                     }                 
                 }
                 TileRequest tr;
-                switch (i.imageformat) {
-                    case JPG:
-                    case PNG:
-                        tr = TileRequest.genTileRequest(i.uri, new ImageRegion(i.x,i.y,i.w,i.h), new Rectangle(i.tx,i.ty), true, true, false, i.aspectratio);
-                        break;
-                    case TTL:
-                        tr = TileRequest.genTileRequest(i.uri, new ImageRegion(i.x,i.y,i.w,i.h), new Rectangle(i.tx,i.ty), true, false, true, i.aspectratio);
-                        break;
-                    default:
-                        tr = TileRequest.genTileRequest(i.uri, new ImageRegion(i.x,i.y,i.w,i.h), new Rectangle(i.tx,i.ty), true, true, false, i.aspectratio);
-                }
+                tr = switch (i.imageformat) {
+                    case JPG, PNG -> TileRequest.genTileRequest(i.uri, new ImageRegion(i.x,i.y,i.w,i.h), new Rectangle(i.tx,i.ty), true, true, false, i.aspectratio);
+                    case TTL -> TileRequest.genTileRequest(i.uri, new ImageRegion(i.x,i.y,i.w,i.h), new Rectangle(i.tx,i.ty), true, false, true, i.aspectratio);
+                    default -> TileRequest.genTileRequest(i.uri, new ImageRegion(i.x,i.y,i.w,i.h), new Rectangle(i.tx,i.ty), true, true, false, i.aspectratio);
+                };
                 Tile tile = null;
                 try (TileRequestEngine tre = new TileRequestEngine(i.uri)){
                     Future<Tile> ftile = tre.getFutureTile(tr);
@@ -96,7 +90,7 @@ public class ImageServer extends HttpServlet {
                     tile = new Tile(tr,bi);
                 }
                 if (null != i.imageformat) switch (i.imageformat) {
-                    case JPG:{
+                    case JPG: {
                         byte[] imageInByte = tile.getJPG();
                         try (ServletOutputStream sos = response.getOutputStream()) {
                             response.setContentType("image/jpg");
@@ -106,7 +100,7 @@ public class ImageServer extends HttpServlet {
                         } catch (IOException ex) {
                             ReportError(response, "error writing image");
                         }       break;
-                        }
+                    }
                     case PNG:{
                         byte[] imageInByte = tile.getPNG();
                         try (ServletOutputStream sos = response.getOutputStream()) {
@@ -117,7 +111,7 @@ public class ImageServer extends HttpServlet {
                         } catch (IOException ex) {
                             ReportError(response, "error writing image");
                         }       break;
-                        }
+                    }
                     case TTL:
                         response.setContentType("application/x-turtle");
                         response.setHeader("Access-Control-Allow-Origin", "*");
@@ -126,7 +120,7 @@ public class ImageServer extends HttpServlet {
                         } catch (IOException ex) {
                             ReportError(response, "issue writing image.ttl file");
                         }
-                        break;
+                    break;
                     case JSON:
                         response.setContentType("application/ld+json");
                         response.setHeader("Access-Control-Allow-Origin", "*");                   
