@@ -78,8 +78,8 @@
         <java.version>21</java.version>
         <maven.compiler.release>21</maven.compiler.release>
         <exec.longClasspath>true</exec.longClasspath>
-        <springboot.version>3.3.9</springboot.version>
-	<resteasy.version>6.2.9.Final</resteasy.version>
+        <springboot.version>3.4.3</springboot.version>
+	<resteasy.version>6.2.11.Final</resteasy.version>
         <jetty.version>12.0.16</jetty.version>
         <jena.version>5.3.0</jena.version>
         <wicket.ver>10.3.0</wicket.ver>
@@ -94,13 +94,13 @@
         <jts.version>1.19.0</jts.version>
         <twelvemonkeys.version>3.12.0</twelvemonkeys.version>
         <jcommander.version>1.83</jcommander.version>
-        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-shade-plugin.version>3.6.0</maven-shade-plugin.version>
         <maven-enforcer-plugin.version>3.5.0</maven-enforcer-plugin.version>
         <maven-deploy-plugin.version>3.1.2</maven-deploy-plugin.version>
         <maven-dependency-plugin.version>3.7.0</maven-dependency-plugin.version>
-        <native-maven-plugin.version>0.10.2</native-maven-plugin.version>
-        <jpackage-maven-plugin.version>1.6.0</jpackage-maven-plugin.version>
+        <native-maven-plugin.version>0.10.5</native-maven-plugin.version>
+        <jpackage-maven-plugin.version>1.6.6</jpackage-maven-plugin.version>
     </properties>
     
     <dependencyManagement>

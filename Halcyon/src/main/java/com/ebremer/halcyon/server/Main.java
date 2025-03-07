@@ -60,10 +60,10 @@ public class Main {
         SLF4JBridgeHandler.install();
     }
 
-    @Bean
-    MultipartResolver multipartResolver() {
-        return new StandardServletMultipartResolver();
-    }
+    //@Bean
+    //MultipartResolver multipartResolver() {
+//        return new StandardServletMultipartResolver();
+//    }
 
     /*
     @Bean(name = "keycloakSessionManagement")

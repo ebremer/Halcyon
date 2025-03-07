@@ -188,15 +188,16 @@
                         <extensions>true</extensions>
                         <executions>
                             <execution>
-                                <id>add-reachability-metadata</id>
+                                <id>build-native</id>
                                 <goals>
-                                    <goal>add-reachability-metadata</goal>
+                                    <goal>compile-no-fork</goal>
                                 </goals>
+                                <phase>package</phase>
                             </execution>
                         </executions>
                         <configuration>
                             <skip>false</skip>
-                            <imageName>hatch</imageName>
+                            <imageName>halcyon</imageName>
                             <fallback>false</fallback>
                             <mainClass>com.ebremer.halcyon.server.Main</mainClass>
                                 <debug>true</debug>
@@ -211,21 +212,13 @@
                                     <buildArg>initialize-at-build-time=jakarta.servlet.Servlet</buildArg>
                                     <buildArg>initialize-at-run-time=jakarta.servlet.Servlet</buildArg>-->
                                 </buildArgs>
-                            <classesDirectory>${project.build.outputDirectory}</classesDirectory>
-                                <metadataRepository>
-                                <enabled>true</enabled>
-                            </metadataRepository>
-                            <requiredVersion>22.3</requiredVersion>
-                            <classpath>
-                                <param>${project.build.directory}/${project.artifactId}-${project.version}.jar</param>
-                            </classpath>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
-    <dependencies>       
+    <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
