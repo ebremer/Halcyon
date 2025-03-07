@@ -20,8 +20,8 @@ public class JwtVerifier {
     public Claims verify(String token) {
         try {         
             JwtParser parser = Jwts.parser()
-                    .setAllowedClockSkewSeconds(30)  // Allow some clock skew
-                    .setSigningKey(publicKey)
+                    .clockSkewSeconds(30) // Allow some clock skew
+                    .verifyWith(publicKey)
                     .build();
             Jws<Claims> claimsJws = parser.parseClaimsJws(token);
             return claimsJws.getBody();
