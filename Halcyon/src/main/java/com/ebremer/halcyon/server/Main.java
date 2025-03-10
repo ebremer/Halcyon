@@ -119,6 +119,7 @@ public class Main {
         return srb;
     }
 
+    /*
     @Lazy(true)
     @Bean
     ServletRegistrationBean InvalidateSessionRegistration() {
@@ -128,7 +129,7 @@ public class Main {
         srb.setServlet(new InvalidateSessionServlet());
         srb.setUrlMappings(Arrays.asList("/invalidateSession/*"));
         return srb;
-    }
+    }*/
 
     @Bean
     public ServletRegistrationBean proxyServletRegistrationBean() {

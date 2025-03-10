@@ -3,7 +3,6 @@ package com.ebremer.halcyon.fuseki;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -23,6 +22,7 @@ public class HalcyonProxyServlet extends ProxyServlet {
         proxyRequest.removeHeaders("X-Forwarded-Proto");
         proxyRequest.removeHeaders("X-Forwarded-Host");        
         proxyRequest.removeHeaders("Access-Control-Allow-Headers");
+        proxyRequest.removeHeaders("X-Forwarded-Port");
         
         proxyRequest.addHeader("X-Forwarded-For", servletRequest.getRemoteAddr());
         proxyRequest.addHeader("X-Forwarded-Proto", "https");        

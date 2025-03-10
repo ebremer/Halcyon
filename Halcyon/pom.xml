@@ -388,12 +388,13 @@
             <classifier>jakarta</classifier>
             <version>${shiro.version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.jcabi</groupId>
             <artifactId>jcabi-aspects</artifactId>
             <version>0.24.1</version>
             <type>jar</type>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
