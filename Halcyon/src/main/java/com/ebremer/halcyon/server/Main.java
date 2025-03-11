@@ -160,19 +160,12 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("Starting Halcyon...");
-        /*
-        if (System.getProperty("spring.aot.processing") != null) {
-            System.out.println("Detected AOT processing mode, exiting.");
-            System.exit(0); // Prevents full app startup
-        }
-        */
         INIT i = new INIT();
         i.init();
         DataCore.getInstance();
         if (!(System.getProperty("spring.aot.processing") != null)) {
             SPARQLEndPoint.getSPARQLEndPoint();
-        }
-        //ServicesLoader halcyonServiceLoader = new ServicesLoader();       
+        }    
         ServicesLoader.init();
         FileReaderFactoryProvider.init(Main.class.getClassLoader());
         Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
