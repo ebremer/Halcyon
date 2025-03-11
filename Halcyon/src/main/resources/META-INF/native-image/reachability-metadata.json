@@ -5303,6 +5303,14 @@
       "allDeclaredFields": true
     },
     {
+      "type": "java.net.ConnectException",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.ebremer.halcyon.wicket.ethereal.Zephyr3",
+      "allDeclaredFields": true
+    },
+    {
       "type": "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration",
       "allDeclaredFields": true,
       "methods": [
