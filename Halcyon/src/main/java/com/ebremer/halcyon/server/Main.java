@@ -26,7 +26,6 @@ import org.mitre.dsmiley.httpproxy.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.pac4j.oidc.client.KeycloakOidcClient;
 import org.pac4j.oidc.config.KeycloakOidcConfiguration;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -44,33 +43,11 @@ public class Main {
     @Autowired
     private DefaultSslBundleRegistry defaultSslBundleRegistry;
 
-    //@Autowired
-    //private KeycloakOidcConfiguration keycloakOidcConfiguration;
-
     @PostConstruct
     public void init() {
         SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
     }
-
-    //@Bean
-    //MultipartResolver multipartResolver() {
-//        return new StandardServletMultipartResolver();
-//    }
-
-    /*
-    @Bean(name = "keycloakSessionManagement")
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    FilterRegistrationBean<RequestFilter> keycloakSessionManagement() {
-        System.out.println("Add Keycloak Session Management Filter...");
-        final var filter = new FilterRegistrationBean<RequestFilter>();
-        filter.setName("Keycloak Session Management");
-        filter.setOrder(0);
-        filter.setFilter(new RequestFilter());
-        filter.addUrlPatterns(properties.getContextPath() + "/*");
-        return filter;
-    }
-*/
 
     @Bean
     public KeycloakOidcConfiguration keycloakOidcConfiguration() {
@@ -85,12 +62,7 @@ public class Main {
         return config;
     }
 
-  //  @Bean
-    //public KeycloakOidcClient keycloakOidcClient() {
-      //  return new KeycloakOidcClient(keycloakOidcConfiguration);
-    //}
-
-    @Lazy(true)
+    @Lazy(false)
     @Bean
     ServletRegistrationBean ImageServerRegistration() {
         ServletRegistrationBean srb = new ServletRegistrationBean();
@@ -112,7 +84,6 @@ public class Main {
         return srb;
     }
 
-   
     @Lazy(true)
     @Bean
     ServletRegistrationBean InvalidateSessionRegistration() {
@@ -168,10 +139,10 @@ public class Main {
         }    
         ServicesLoader.init();
         FileReaderFactoryProvider.init(Main.class.getClassLoader());
-        Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
-        readers.forEachRemaining(rr -> {
-            System.out.println("MAIN LOAD TIF READERS : " + rr.getClass().toGenericString());
-        });
+        //Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
+        //readers.forEachRemaining(rr -> {
+          //  System.out.println("MAIN LOAD TIF READERS : " + rr.getClass().toGenericString());
+        //});
 
         Spatial.init();
         SpringApplicationBuilder sab = new SpringApplicationBuilder(Main.class);
@@ -185,41 +156,4 @@ public class Main {
         app.run(args);
         System.out.println("===================== Welcome to Halcyon!");
     }
-
-    
-    /*
-    static class ServletInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            HalcyonSettings.getSettings().GetResourceHandlers().forEach(rh -> {
-                ServletRegistrationBean<Servlet> srb = new ServletRegistrationBean();
-                srb.setLoadOnStartup(3);
-                String name = "LDP " + UUID.randomUUID().toString();
-                srb.setBeanName(name);
-                srb.setOrder(Ordered.HIGHEST_PRECEDENCE + 4);
-                if (OperatingSystemInfo.ifWindows()) {
-                    srb.addInitParameter("resourceBase", rh.resourceBase().getPath().substring(1));
-                    System.out.println("Add Path --> " + rh.urlPath() + "  " + rh.resourceBase().getPath().substring(1));
-                } else {
-                    srb.addInitParameter("resourceBase", rh.resourceBase().getPath());
-                    System.out.println("Add Path --> " + rh.urlPath() + "  " + rh.resourceBase().getPath());
-                }
-                srb.addInitParameter("dirAllowed", "true");
-                srb.setServlet(new LDPServer());
-                srb.setUrlMappings(Arrays.asList(rh.urlPath() + "*"));
-                applicationContext.getBeanFactory().registerSingleton(name, srb);
-            });
-            ServletRegistrationBean<Servlet> srb = new ServletRegistrationBean();
-            srb.setLoadOnStartup(3);
-            String name = "LDP " + UUID.randomUUID().toString();
-            srb.setBeanName(name);
-            srb.setOrder(Ordered.HIGHEST_PRECEDENCE + 4);
-            srb.addInitParameter("resourceBase", "D:/HalcyonStorage/users/");
-            srb.addInitParameter("dirAllowed", "true");
-            srb.setServlet(new LDPServer());
-            srb.setUrlMappings(Arrays.asList("/users/*"));
-            applicationContext.getBeanFactory().registerSingleton(name, srb);
-        }
-    }*/
 }
