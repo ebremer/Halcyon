@@ -5447,7 +5447,67 @@
       "allDeclaredFields": true
     },
     {
-      "type": "org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration",
+      "type": "com.oracle.svm.core.jdk.management.SubstrateClassLoadingMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.jdk.management.SubstrateRuntimeMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.code.CodeCacheManagerMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.jdk.management.SubstrateCompilationMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.GenScavengeMemoryPoolMXBeans",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.GenScavengeMemoryPoolMXBeans$OldGenerationMemoryPoolMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.GenScavengeMemoryPoolMXBeans$EdenMemoryPoolMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.HeapImplMemoryMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.HeapImplMemoryMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.IncrementalGarbageCollectorMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.jdk.management.SubstrateThreadMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.code.CodeCachePoolMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.code.CodeCachePoolMXBean$CodeAndDataPool",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.code.CodeCachePoolMXBean$NativeMetadataPool",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.GenScavengeMemoryPoolMXBeans$SurvivorMemoryPoolMXBean",
+      "allDeclaredFields": true
+    },
+    {
+      "type": "com.oracle.svm.core.genscavenge.CompleteGarbageCollectorMXBean",
       "allDeclaredFields": true,
       "methods": [
         {
