@@ -175,11 +175,27 @@
         <profile>
             <id>native</id>
             <build>
-                <plugins>   
+                <plugins>
                     <plugin>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-maven-plugin</artifactId>
                         <version>${springboot.version}</version>
+                        <configuration>
+                            <image>
+                                <builder>paketobuildpacks/builder:tiny</builder>
+                                    <env>
+                                        <BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
+                                    </env>
+                            </image>
+                        </configuration>                        
+                        <executions>
+                            <execution>
+                                <id>process-aot</id>
+                                <goals>
+                                    <goal>process-aot</goal>
+                                </goals>
+                            </execution>
+                        </executions>            
                     </plugin>
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
@@ -198,18 +214,34 @@
                         <configuration>
                             <skip>false</skip>
                             <imageName>halcyon</imageName>
-                            <fallback>false</fallback>
+                            <fallback>true</fallback>
+                            <agent>
+                                <enabled>true</enabled>
+                                <metadataCopy>
+                                    <disabledStages>
+                                        <stage>main</stage>
+                                    </disabledStages>
+                                    <merge>true</merge>
+                                    <outputDirectory>src/test/resources/META-INF/native-image</outputDirectory>
+                                </metadataCopy>
+                            </agent>
                             <mainClass>com.ebremer.halcyon.server.Main</mainClass>
                                 <debug>true</debug>
                                 <skipNativeTests>true</skipNativeTests>
                                 <verbose>true</verbose>
                                 <buildArgs>
-                                    <buildArg>--no-fallback</buildArg>
-                                    <buildArg>-H:ConfigurationFileDirectories=nativeconfig</buildArg>
+                                    <buildArg>-H:GenerateDebugInfo=0</buildArg>
                                     <buildArg>--enable-url-protocols=https</buildArg>
                                     <buildArg>-H:+AddAllCharsets</buildArg>
+                                    <buildArg>--exact-reachability-metadata</buildArg>
+                                    <buildArg>--report-unsupported-elements-at-runtime</buildArg>
                                 </buildArgs>
                         </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.5.2</version>
                     </plugin>
                 </plugins>
             </build>
@@ -244,7 +276,19 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
-        </dependency>          
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aot</artifactId>
+            <version>3.4.3</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.graalvm.nativeimage</groupId>
+            <artifactId>svm</artifactId>
+            <scope>provided</scope>
+            <version>24.1.2</version>
+        </dependency>        
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

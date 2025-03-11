@@ -706,17 +706,7 @@
     },
     {
       "type": "com.ebremer.halcyon.server.SslConfig",
-      "allDeclaredFields": true,
-      "methods": [
-        {
-          "name": "getSslContext",
-          "parameterTypes": []
-        },
-        {
-          "name": "servletContainerCustomizer",
-          "parameterTypes": []
-        }
-      ]
+      "allDeclaredFields": true
     },
     {
       "type": "com.ebremer.halcyon.server.SslConfig$$SpringCGLIB$$0",

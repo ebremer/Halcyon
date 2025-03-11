@@ -5,7 +5,6 @@ import com.ebremer.halcyon.services.ServicesLoader;
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.filereaders.FileReaderFactoryProvider;
 import com.ebremer.halcyon.imagebox.ImageServer;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner.Mode;
@@ -18,31 +17,25 @@ import org.springframework.core.Ordered;
 import org.springframework.context.annotation.Lazy;
 import com.ebremer.halcyon.fuseki.HalcyonProxyServlet;
 import com.ebremer.halcyon.fuseki.SPARQLEndPoint;
-import com.ebremer.halcyon.lib.OperatingSystemInfo;
 import com.ebremer.halcyon.lib.spatial.Spatial;
-import com.ebremer.halcyon.server.ldp.LDPServer;
 import com.ebremer.halcyon.sparql.InvalidateSessionServlet;
 import jakarta.annotation.PostConstruct;
-import jakarta.servlet.Servlet;
 import java.util.Iterator;
-import java.util.UUID;
 import javax.imageio.ImageIO;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.pac4j.oidc.client.KeycloakOidcClient;
 import org.pac4j.oidc.config.KeycloakOidcConfiguration;
 import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
+import org.springframework.boot.autoconfigure.websocket.servlet.WebSocketServletAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.ssl.DefaultSslBundleRegistry;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 
-@SpringBootApplication(exclude = LiquibaseAutoConfiguration.class)
+@SpringBootApplication(exclude = { WebSocketServletAutoConfiguration.class, LiquibaseAutoConfiguration.class, DataSourceAutoConfiguration.class })
 @ConfigurationPropertiesScan({"com.ebremer.halcyon.server"})
 public class Main {
 
@@ -51,8 +44,8 @@ public class Main {
     @Autowired
     private DefaultSslBundleRegistry defaultSslBundleRegistry;
 
-    @Autowired
-    private KeycloakOidcConfiguration keycloakOidcConfiguration;
+    //@Autowired
+    //private KeycloakOidcConfiguration keycloakOidcConfiguration;
 
     @PostConstruct
     public void init() {
@@ -92,10 +85,10 @@ public class Main {
         return config;
     }
 
-    @Bean
-    public KeycloakOidcClient keycloakOidcClient() {
-        return new KeycloakOidcClient(keycloakOidcConfiguration);
-    }
+  //  @Bean
+    //public KeycloakOidcClient keycloakOidcClient() {
+      //  return new KeycloakOidcClient(keycloakOidcConfiguration);
+    //}
 
     @Lazy(true)
     @Bean
@@ -119,7 +112,7 @@ public class Main {
         return srb;
     }
 
-    /*
+   
     @Lazy(true)
     @Bean
     ServletRegistrationBean InvalidateSessionRegistration() {
@@ -129,7 +122,7 @@ public class Main {
         srb.setServlet(new InvalidateSessionServlet());
         srb.setUrlMappings(Arrays.asList("/invalidateSession/*"));
         return srb;
-    }*/
+    }
 
     @Bean
     public ServletRegistrationBean proxyServletRegistrationBean() {
@@ -165,12 +158,20 @@ public class Main {
         return registration;
     }
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
+    public static void main(String[] args) {
         logger.info("Starting Halcyon...");
+        /*
+        if (System.getProperty("spring.aot.processing") != null) {
+            System.out.println("Detected AOT processing mode, exiting.");
+            System.exit(0); // Prevents full app startup
+        }
+        */
         INIT i = new INIT();
         i.init();
         DataCore.getInstance();
-        SPARQLEndPoint.getSPARQLEndPoint();
+        if (!(System.getProperty("spring.aot.processing") != null)) {
+            SPARQLEndPoint.getSPARQLEndPoint();
+        }
         //ServicesLoader halcyonServiceLoader = new ServicesLoader();       
         ServicesLoader.init();
         FileReaderFactoryProvider.init(Main.class.getClassLoader());
@@ -181,15 +182,19 @@ public class Main {
 
         Spatial.init();
         SpringApplicationBuilder sab = new SpringApplicationBuilder(Main.class);
-        sab.initializers(new ServletInitializer());
+       // sab.initializers(new ServletInitializer());
         SpringApplication app = sab.build();
-        //SpringApplication app = new SpringApplication(Main.class);        
+        //SpringApplication app = new SpringApplication(Main.class);
+        app.setMainApplicationClass(Main.class);
+        app.addInitializers(new ServletInitializer());
         app.setAdditionalProfiles("production");
         app.setBannerMode(Mode.CONSOLE);
         app.run(args);
         System.out.println("===================== Welcome to Halcyon!");
     }
 
+    
+    /*
     static class ServletInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
         @Override
@@ -223,5 +228,5 @@ public class Main {
             srb.setUrlMappings(Arrays.asList("/users/*"));
             applicationContext.getBeanFactory().registerSingleton(name, srb);
         }
-    }
+    }*/
 }
