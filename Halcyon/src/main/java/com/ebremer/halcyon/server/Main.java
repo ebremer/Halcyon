@@ -20,8 +20,6 @@ import com.ebremer.halcyon.fuseki.SPARQLEndPoint;
 import com.ebremer.halcyon.lib.spatial.Spatial;
 import com.ebremer.halcyon.sparql.InvalidateSessionServlet;
 import jakarta.annotation.PostConstruct;
-import java.util.Iterator;
-import javax.imageio.ImageIO;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

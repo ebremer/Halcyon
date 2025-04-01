@@ -25,9 +25,13 @@ public class LDPServer extends DefaultServlet {
     private static final String APPLICATION_JSON = "application/json";
 
     /**
-     * Handles GET requests. Based on the Accept header, it returns RDF data in
-     * different formats (N-Triples, Turtle, or JSON-LD). If the format is
-     * unsupported, the request is passed to the default handler.
+     * Handles GET requests.Based on the Accept header, it returns RDF data in
+       different formats (N-Triples, Turtle, or JSON-LD).If the format is
+       unsupported, the request is passed to the default handler.
+     * @param request
+     * @param response
+     * @throws jakarta.servlet.ServletException
+     * @throws java.io.IOException
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,22 +41,22 @@ public class LDPServer extends DefaultServlet {
 
         try (ServletOutputStream out = response.getOutputStream()) {
             switch (accept) {
-                case NTRIPLES:
+                case NTRIPLES -> {
                     setResponse(response, NTRIPLES, HttpServletResponse.SC_OK);
                     RDFDataMgr.write(out, Tools.getRDF(prefer, request.getRequestURL().toString()).getModel(), Lang.NTRIPLES);
-                    break;
-                case TURTLE:
+                }
+                case TURTLE -> {
                     setResponse(response, TURTLE, HttpServletResponse.SC_OK);
                     RDFDataMgr.write(out, Tools.getRDF(prefer, request.getRequestURL().toString()).getModel(), Lang.TURTLE);
-                    break;
-                case JSON_LD:
+                }
+                case JSON_LD -> {
                     setResponse(response, JSON_LD, HttpServletResponse.SC_OK);
                     Tools.Resource2JSONLD(prefer, Tools.getRDF(prefer, request.getRequestURL().toString()), out);
-                    break;
-                default:
+                }
+                default -> {
                     logger.info("Passing request to default handler for URI: {}", request.getRequestURI());
                     super.doGet(request, response);
-                    break;
+                }
             }
         } catch (Exception e) {
             logger.error("Error processing GET request for URI: {}", request.getRequestURI(), e);
@@ -61,9 +65,11 @@ public class LDPServer extends DefaultServlet {
     }
 
     /**
-     * Handles POST requests. Depending on the content type (Turtle, JSON, or
-     * binary data), it performs actions such as saving data, uploading files,
-     * or responding with a default HTML page if the content type is unsupported.
+     * Handles POST requests.Depending on the content type (Turtle, JSON, or
+       binary data), it performs actions such as saving data, uploading files,
+       or responding with a default HTML page if the content type is unsupported.
+     * @param request
+     * @param response
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -73,6 +79,8 @@ public class LDPServer extends DefaultServlet {
 
     /**
      * Handles PUT requests (similar to POST).
+     * @param request
+     * @param response
      */
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -88,20 +96,15 @@ public class LDPServer extends DefaultServlet {
     private void handleRequestWithContentType(HttpServletRequest request, HttpServletResponse response, String contentType, String method) throws IOException {
         try {
             switch (contentType) {
-                case TURTLE:
-                    // Add logic for text/turtle here
-                    break;
-                case APPLICATION_JSON:
+                case TURTLE -> {
+                }
+                case APPLICATION_JSON -> {
                     if ("PUT".equals(method)) {
                         Tools.Save(request, response);
                     }
-                    break;
-                case OCTET_STREAM:
-                    Utils.UploadFile(request);
-                    break;
-                default:
-                    sendDefaultResponse(response);
-                    break;
+                }
+                case OCTET_STREAM -> Utils.UploadFile(request);
+                default -> sendDefaultResponse(response);
             }
         } catch (Exception e) {
             logger.error("Error processing {} request for URI: {}", method, request.getRequestURI(), e);

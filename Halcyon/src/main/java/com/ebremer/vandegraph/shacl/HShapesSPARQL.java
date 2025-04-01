@@ -18,8 +18,8 @@ public class HShapesSPARQL {
     
     private HShapesSPARQL() {
         sparql = new HashMap<>();
-        HShapes shapes = new HShapes();
-        Model m = shapes.getShapes();
+        //HShapes shapes = new HShapes();
+        //Model m = shapes.getShapes();
         ParameterizedSparqlString pss = new ParameterizedSparqlString(
             """
             construct {

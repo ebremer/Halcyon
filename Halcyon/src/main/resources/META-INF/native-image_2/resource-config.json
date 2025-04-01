@@ -1,8 +1,0 @@
-{
-  "resources": [
-    {
-      "pattern": "META-INF/spring/logback-pattern-rules"
-    }
-  ]
-}
-

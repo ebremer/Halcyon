@@ -110,14 +110,6 @@ public class DirectoryProcessor {
                         .forEach(fx -> {
                             Optional<URI> rrz = PathMapper.getPathMapper().file2http(fx.toUri());
                             URI httpuri;
-                            
-                            if (fx.toString().endsWith(".zarr")) {
-                                int x = 0;
-                                System.out.println("BOOYAH!!! "+fx.toString());
-                            } else {
-                                System.out.println("NYET!!! "+fx.toString());
-                            }
-                            
                             if (rrz.isPresent()) {
                                 httpuri = rrz.get();
                             } else {
@@ -157,6 +149,7 @@ public class DirectoryProcessor {
                             m.add(r,HAL.halcyonVersion, HalcyonSettings.VERSION);
                             m.addLiteral(r, HAL.fileLastModified, file.lastModified());
                             long now = System.nanoTime();
+                            /*
                             Hashes hashes;                                    
                             try {
                                 hashes = HashTools.calculateHashes(file);
@@ -170,7 +163,7 @@ public class DirectoryProcessor {
                                 logger.error(ex.toString());
                             } catch (IOException ex) {
                                 logger.error(ex.toString());
-                            }
+                            }*/
                             System.out.println("Time = "+((System.nanoTime()-now)/1000000000d));
                             pathinfo = PathInfo(httpuri);
                             buffer.begin(ReadWrite.WRITE);
