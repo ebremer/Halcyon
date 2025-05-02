@@ -235,6 +235,9 @@
                                     <buildArg>-H:+AddAllCharsets</buildArg>
                                     <buildArg>--exact-reachability-metadata</buildArg>
                                     <buildArg>--report-unsupported-elements-at-runtime</buildArg>
+                                    <buildArg>-H:IncludeResources=defaultapplication.yml</buildArg>
+                                    <buildArg>-H:IncludeResources=defaultkeycloak-realm-config.json</buildArg>
+                                    <buildArg>-H:IncludeResources=defaultkeycloak.json</buildArg>
                                 </buildArgs>
                         </configuration>
                     </plugin>

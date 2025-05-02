@@ -81,14 +81,14 @@
         <springboot.version>3.4.3</springboot.version>
 	<resteasy.version>6.2.11.Final</resteasy.version>
         <jetty.version>12.0.16</jetty.version>
-        <jena.version>5.3.0</jena.version>
+        <jena.version>5.4.0</jena.version>
         <wicket.ver>10.4.0</wicket.ver>
         <beakgraph.version>0.9.0</beakgraph.version>        
         <hilbert.ver>0.2.3</hilbert.ver>
         <commons-pool2.ver>2.12.1</commons-pool2.ver>
         <jakarta.json.version>2.0.1</jakarta.json.version> 
         <parrson.json.version>1.1.6</parrson.json.version>
-        <titanium-json-ld.ver>1.4.0</titanium-json-ld.ver>
+        <titanium-json-ld.ver>1.6.0</titanium-json-ld.ver>
         <!--<dcm4che.ver>5.31.2</dcm4che.ver>-->
         <shiro.version>2.0.1</shiro.version>
         <jts.version>1.19.0</jts.version>

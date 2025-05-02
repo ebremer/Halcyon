@@ -288,12 +288,13 @@ public class SegmentationProcess implements AbstractProcess {
     @Override
     public void Process(BeakWriter bw, Dataset ds) {
         Model xxx = ds.getDefaultModel();
+        System.out.println("2");
+        System.out.println("Calculate Areas...");
         logger.debug("Calculate Areas...");
-        FeatureGeneration.AddAreas(xxx);
+        //FeatureGeneration.AddAreas(xxx);
+        System.out.println("Calculate Perimeters...");
         logger.debug("Calculate Perimeters...");
-        FeatureGeneration.AddPerimeters(xxx);
-        //FeatureGeneration.Display(xxx);
-        //RDFDataMgr.write(System.out, ds.getDefaultModel(), RDFFormat.TURTLE_PRETTY);
+        //FeatureGeneration.AddPerimeters(xxx);
         Literal tx = xxx.createTypedLiteral(String.valueOf(512), XSDDatatype.XSDint);
         Literal ty = xxx.createTypedLiteral(String.valueOf(512), XSDDatatype.XSDint);
         Literal fw = xxx.createTypedLiteral(String.valueOf(width), XSDDatatype.XSDint);
@@ -333,6 +334,7 @@ public class SegmentationProcess implements AbstractProcess {
         logger.debug("Remove Crud...");
         RemoveCrud(ds.getDefaultModel());        
         logger.debug("Analyze Dataset...");
+        System.out.println("HERE A");
         bw.Analyze(ds);
         logger.debug("Write Default Graph...");
         Resource dg = ResourceFactory.createResource("urn:halcyon:defaultgraph");
@@ -341,6 +343,7 @@ public class SegmentationProcess implements AbstractProcess {
         logger.debug("Registered Default Graph...");
         bw.Add(dg, ds.getDefaultModel());
         logger.debug("Added Default Graph...");
+        System.out.println("HERE B");
         for (int ss=0; ss<scales.size();ss++) {
             scaleset.add(ss);
             HashSet<RDFNode> ngs = CreateNamedGraphs(ds,ss);
@@ -349,6 +352,7 @@ public class SegmentationProcess implements AbstractProcess {
             logger.debug("Bin Annotations..."+ss);
             BinTheAnnotations(ds);
             int c = ngs.size();
+            System.out.println("HERE Bb");
             for (RDFNode node : ngs) {
                 Resource ng = node.asResource();
                 long begin = System.nanoTime();
@@ -363,7 +367,8 @@ public class SegmentationProcess implements AbstractProcess {
                 end = end / 1000000d;
                 c--;
                 logger.info(ng+" "+c+"  "+end);
-            }            
+            }       
+            System.out.println("HERE C");
             logger.debug("RemoveChunks..."+ss);
             ngs.forEach(node->{
                 Resource ng = node.asResource();
