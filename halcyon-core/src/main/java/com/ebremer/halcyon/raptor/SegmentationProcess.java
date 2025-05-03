@@ -288,13 +288,13 @@ public class SegmentationProcess implements AbstractProcess {
     @Override
     public void Process(BeakWriter bw, Dataset ds) {
         Model xxx = ds.getDefaultModel();
-        System.out.println("2");
+        System.out.println("5 -----------------------------------------------------");
         System.out.println("Calculate Areas...");
         logger.debug("Calculate Areas...");
-        //FeatureGeneration.AddAreas(xxx);
+        FeatureGeneration.AddAreas(xxx);
         System.out.println("Calculate Perimeters...");
         logger.debug("Calculate Perimeters...");
-        //FeatureGeneration.AddPerimeters(xxx);
+        FeatureGeneration.AddPerimeters(xxx);
         Literal tx = xxx.createTypedLiteral(String.valueOf(512), XSDDatatype.XSDint);
         Literal ty = xxx.createTypedLiteral(String.valueOf(512), XSDDatatype.XSDint);
         Literal fw = xxx.createTypedLiteral(String.valueOf(width), XSDDatatype.XSDint);
@@ -334,12 +334,14 @@ public class SegmentationProcess implements AbstractProcess {
         logger.debug("Remove Crud...");
         RemoveCrud(ds.getDefaultModel());        
         logger.debug("Analyze Dataset...");
-        System.out.println("HERE A");
+        System.out.println("HERE AAAAAAAAAxxxxxxxxxxxxxxAAAAAAAAAAA");
         bw.Analyze(ds);
+        System.out.println("HERE AB");
         logger.debug("Write Default Graph...");
         Resource dg = ResourceFactory.createResource("urn:halcyon:defaultgraph");
         logger.debug("Created Resource for Default Graph...");
         bw.RegisterNamedGraph(dg);
+        System.out.println("HERE Ac");
         logger.debug("Registered Default Graph...");
         bw.Add(dg, ds.getDefaultModel());
         logger.debug("Added Default Graph...");
