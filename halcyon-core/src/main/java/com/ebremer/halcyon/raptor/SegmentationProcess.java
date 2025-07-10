@@ -9,11 +9,16 @@ import com.ebremer.ns.EXIF;
 import com.ebremer.ns.GEO;
 import com.ebremer.ns.HAL;
 import com.ebremer.ns.PROVO;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ParameterizedSparqlString;
@@ -28,6 +33,8 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.update.UpdateAction;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
@@ -332,7 +339,15 @@ public class SegmentationProcess implements AbstractProcess {
         logger.debug("Separate Annotations...");
         SeparateAnnotations(ds);
         logger.debug("Remove Crud...");
-        RemoveCrud(ds.getDefaultModel());        
+        RemoveCrud(ds.getDefaultModel());  
+        try (FileOutputStream fos = new FileOutputStream(new File("/tcga/mega.nq"))) {
+            RDFDataMgr.write(fos, ds, Lang.NQUADS);
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(SegmentationProcess.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(SegmentationProcess.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.exit(0);
         logger.debug("Analyze Dataset...");
         System.out.println("HERE AAAAAAAAAxxxxxxxxxxxxxxAAAAAAAAAAA");
         bw.Analyze(ds);
