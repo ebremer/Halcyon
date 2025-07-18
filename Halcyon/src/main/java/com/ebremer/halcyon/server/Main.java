@@ -19,7 +19,11 @@ import com.ebremer.halcyon.fuseki.HalcyonProxyServlet;
 import com.ebremer.halcyon.fuseki.SPARQLEndPoint;
 import com.ebremer.halcyon.lib.spatial.Spatial;
 import com.ebremer.halcyon.sparql.InvalidateSessionServlet;
+import com.ebremer.vandegraph.dev.Stack;
+import com.ebremer.vandegraph.dev.efUtils;
 import jakarta.annotation.PostConstruct;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.ReadWrite;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +135,14 @@ public class Main {
         logger.info("Starting Halcyon...");
         INIT i = new INIT();
         i.init();
-        DataCore.getInstance();
+        DataCore dc = DataCore.getInstance();
+        Dataset ds = dc.getDataset();        
+        ds.begin(ReadWrite.WRITE);
+        ds.removeNamedModel("https://localhost:8888/stack");
+        Stack stack = new Stack();
+        ds.addNamedModel("https://localhost:8888/stack", stack.getModel());
+        ds.commit();
+        ds.end();
         if (!(System.getProperty("spring.aot.processing") != null)) {
             SPARQLEndPoint.getSPARQLEndPoint();
         }    

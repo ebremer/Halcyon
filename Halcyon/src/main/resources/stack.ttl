@@ -1,0 +1,31 @@
+@prefix zep: <https://halcyon.is/zephyr/ns/> .
+[ a zep:Stack ;
+	zep:x 0;
+	zep:y 0;
+	zep:scalex 0;
+	zep:scaley 0;
+	zep:layer [ a zep:FeatureLayer;
+                zep:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif>;
+                zep:zorder 0;
+                zep:offsetx 0;
+                zep:offsety 0;
+                zep:x 0;
+                zep:y 0;
+                zep:scalex 0;
+                zep:scaley 0;
+                zep:pixelsizeX 1;
+                zep:pixelsizeY 1
+            ];
+	zep:layer [ a zep:FeatureLayer;
+                zep:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif>;
+		zep:zorder 0;
+		zep:offsetx 0;
+		zep:offsety 0;
+		zep:x 0;
+		zep:y 0;				  
+		zep:scalex 0;
+		zep:scaley 0;
+		zep:pixelsizeX 1;
+		zep:pixelsizeY 1
+            ]
+]
