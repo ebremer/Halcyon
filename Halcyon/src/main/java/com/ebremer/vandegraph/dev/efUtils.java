@@ -19,26 +19,9 @@ import jakarta.json.JsonWriter;
 import jakarta.json.JsonWriterFactory;
 import jakarta.json.stream.JsonGenerator;
 import java.io.ByteArrayOutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.riot.RDFFormat;
-import org.apache.jena.riot.RDFWriter;
-import static org.apache.jena.riot.lang.LangJSONLD11.JSONLD_OPTIONS;
-import org.apache.jena.sparql.util.Context;
-import org.apache.jena.sparql.util.Symbol;
-
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.sparql.vocabulary.FOAF;
-
-
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import org.apache.jena.riot.system.JenaTitanium;
@@ -52,57 +35,69 @@ public class efUtils {
     
     public static final String NS = "https://halcyon.is/zephyr/ns/";
     
-    public static String toJSONLD(Model model) throws JsonLdError {           
-        Dataset dsx = DatasetFactory.create(model);
-        DatasetGraph dsg = dsx.asDatasetGraph();
-        RdfDataset ds = JenaTitanium.convert(dsg);
-        Document doc = RdfDocument.of(ds);
-        JsonLdOptions options = new JsonLdOptions();
-        options.setOrdered(false);
-        options.setUseNativeTypes(true);
-        options.setOmitGraph(true);  
-        JsonArray array = FromRdfProcessor.fromRdf(doc, options);
-        JsonObjectBuilder cxt = Json.createObjectBuilder();
-        dsg.prefixes().stream().forEach(p->cxt.add(p.getPrefix(), p.getUri()));
-        cxt
-            .add("src",
-                Json.createObjectBuilder()
-                    .add(Keywords.ID, "zep:src")
-                    .add(Keywords.TYPE, Keywords.ID)
+public static String toJSONLD(Model model) throws JsonLdError {           
+    Dataset dsx = DatasetFactory.create(model);
+    DatasetGraph dsg = dsx.asDatasetGraph();
+    RdfDataset ds = JenaTitanium.convert(dsg);
+    Document doc = RdfDocument.of(ds);
+    JsonLdOptions options = new JsonLdOptions();
+    options.setOrdered(false);
+    options.setUseNativeTypes(true);
+    options.setOmitGraph(true);  
+    options.setCompactArrays(true);
+    JsonArray array = FromRdfProcessor.fromRdf(doc, options);
+    
+    JsonObjectBuilder cxt = Json.createObjectBuilder();
+    dsg.prefixes().stream().forEach(p->cxt.add(p.getPrefix(), p.getUri()));
+    cxt
+        .add("src",
+            Json.createObjectBuilder()
+                .add(Keywords.ID, "zeph:src")
+                .add(Keywords.TYPE, Keywords.ID)
+        )
+        .add("scalex", "zeph:scalex")
+        .add("scaley", "zeph:scaley")
+        .add("zorder", "zeph:zorder")
+        .add("pixelsizeX", "zeph:pixelsizeX")
+        .add("pixelsizeY", "zeph:pixelsizeY")
+        .add("offsetx", "zeph:offsetx")
+        .add("offsety", "zeph:offsety")
+        .add("x", "zeph:x")
+        .add("y", "zeph:y")
+        .add("layer", "zeph:layer")  // Remove @container: @list
+        .add("FeatureLayer", "zeph:FeatureLayer")
+        .add("ImageLayer", "zeph:ImageLayer")
+        .add("Stack", "zeph:Stack")
+    ;
+    
+    JsonObject frame = Json.createObjectBuilder()
+        .add(Keywords.CONTEXT, cxt)
+        .add(Keywords.EMBED, Keywords.ALWAYS)
+        .add("@type", "zeph:Stack")
+        .add("layer", Json.createObjectBuilder()
+            .add(Keywords.LIST, Json.createObjectBuilder()
+                .add(Keywords.EMBED, Keywords.ALWAYS)
+                .add("src", Json.createObjectBuilder())
             )
-            .add("scalex", "zep:scalex")
-            .add("scaley", "zep:scaley")
-            .add("zorder", "zep:zorder")
-            .add("pixelsizeX", "zep:pixelsizeX")
-            .add("pixelsizeY", "zep:pixelsizeY")
-            .add("offsetx", "zep:offsetx")
-            .add("offsety", "zep:offsety")
-            .add("x", "zep:x")
-            .add("y", "zep:y")
-            .add("FeatureLayer", "zep:FeatureLayer")
-            .add("Stack", "zep:Stack")
-        ;
-        JsonObject frame = Json.createObjectBuilder()
-            .add(Keywords.CONTEXT, cxt)
-            .add(Keywords.EMBED, Keywords.ALWAYS)
-            .add(Keywords.OMIT_DEFAULT, true)
-            .add(Keywords.REQUIRE_ALL, false)
-            //.add("classification", Json.createObjectBuilder())
-            .build();
-        FramingApi api = JsonLd.frame(JsonDocument.of(array), JsonDocument.of(frame));
-        JsonStructure x = api.get();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        JsonWriterFactory writerFactory = Json.createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
-        JsonWriter out = writerFactory.createWriter(baos);
-        out.write(x);       
-        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
-    }     
+        )
+        .build();
+
+    FramingApi api = JsonLd
+            .frame(JsonDocument.of(array), JsonDocument.of(frame))
+            .options(options);
+    JsonStructure x = api.get();
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    JsonWriterFactory writerFactory = Json.createWriterFactory(Collections.singletonMap(JsonGenerator.PRETTY_PRINTING, true));
+    JsonWriter out = writerFactory.createWriter(baos);
+    out.write(x);       
+    return new String(baos.toByteArray(), StandardCharsets.UTF_8);
+}
     
     public static void main(String[] args) throws JsonLdError {
+        System.out.println("========== RDF Turtle ==========================================");
         Stack stack = new Stack();
         Model m = stack.getModel();
         System.out.println("========== JSON-LD ==========================================");
         System.out.println(toJSONLD(m));
     }
-    
 }

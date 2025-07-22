@@ -1,31 +1,12 @@
-@prefix zep: <https://halcyon.is/zephyr/ns/> .
-[ a zep:Stack ;
-	zep:x 0;
-	zep:y 0;
-	zep:scalex 0;
-	zep:scaley 0;
-	zep:layer [ a zep:FeatureLayer;
-                zep:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif>;
-                zep:zorder 0;
-                zep:offsetx 0;
-                zep:offsety 0;
-                zep:x 0;
-                zep:y 0;
-                zep:scalex 0;
-                zep:scaley 0;
-                zep:pixelsizeX 1;
-                zep:pixelsizeY 1
-            ];
-	zep:layer [ a zep:FeatureLayer;
-                zep:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif>;
-		zep:zorder 0;
-		zep:offsetx 0;
-		zep:offsety 0;
-		zep:x 0;
-		zep:y 0;				  
-		zep:scalex 0;
-		zep:scaley 0;
-		zep:pixelsizeX 1;
-		zep:pixelsizeY 1
-            ]
-]
+@prefix zeph: <https://halcyon.is/zephyr/ns/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+<https://localhost:8888/stack/1> a zeph:Stack ;
+	zeph:layer (
+           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif> ]
+           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif> ]
+           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif> ]
+           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack3.tif> ]
+           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif> ]
+           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif> ]
+        ) .
+
