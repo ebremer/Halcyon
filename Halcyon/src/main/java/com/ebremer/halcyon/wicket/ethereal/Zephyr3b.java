@@ -10,11 +10,11 @@ import org.apache.wicket.markup.head.JavaScriptHeaderItem;
  *
  * @author erich
  */
-public class Zephyr3 extends BasePage {
+public class Zephyr3b extends BasePage {
     private static final long serialVersionUID = 102163948377788566L;
     private final String options;
     
-    public Zephyr3(String target) {
+    public Zephyr3b(String target) {
         this.options = "const options = {target: '"+target+"'}";
     }
     
@@ -24,7 +24,7 @@ public class Zephyr3 extends BasePage {
         response.render(JavaScriptHeaderItem.forScript(options, "options"));
         HalcyonSession hs = HalcyonSession.get();
         HalcyonPrincipal hp = hs.getHalcyonPrincipal();        
-        response.render(JavaScriptHeaderItem.forScript("var token = '"+hp.getToken()+"'; var useriri = '"+hp.getUserURI()+"'; var userName = '"+hp.getPreferredUserName()+"';", "token"));        
+        response.render(JavaScriptHeaderItem.forScript("var token = '"+hp.getToken()+"'; var useriri = '"+hp.getUserURI()+"'; var userName = '"+hp.getPreferredUserName()+"';", "token"));
         response.render(JavaScriptHeaderItem.forScript(
             """
             var config = {
@@ -53,6 +53,5 @@ public class Zephyr3 extends BasePage {
             """
             , "config")
         );
-        response.render(JavaScriptHeaderItem.forScript("var scenegraph = '"+hp.getToken()+"';", "scenegraph"));
     }
 }

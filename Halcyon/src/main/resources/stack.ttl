@@ -1,12 +1,12 @@
 @prefix zeph: <https://halcyon.is/zephyr/ns/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-<https://localhost:8888/stack/1> a zeph:Stack ;
-	zeph:layer (
-           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif> ]
-           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif> ]
-           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif> ]
-           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack3.tif> ]
-           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif> ]
-           [ zeph:src <https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif> ]
-        ) .
+<stack/1> a zeph:Stack ;
+    zeph:layers (
+        [ zeph:src <Stack0.tif> ]
+        [ zeph:src <Stack1.tif> ]
+        [ zeph:src <Stack2.tif> ]
+        [ zeph:src <Stack3.tif> ]
+        [ zeph:src <Stack4.tif> ]
+        [ zeph:src <Stack5.tif> ]
+    ) .
 
