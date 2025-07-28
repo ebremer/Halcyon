@@ -8,10 +8,11 @@
   <link rel="stylesheet" href="/zephyr/css/main.css">
   <script src="/zephyr/js/jsts.min.js"></script>
 </wicket:head>
-
 <body>
+
 <wicket:extend>
-  <script type="importmap">
+<div id="output"></div>
+ <script type="importmap">
     {
         "imports": {
             "three": "/threejs/build/three.module.js",
@@ -27,6 +28,7 @@
     import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
     import * as ZEPHYR from 'zephyr';
     import { toolbar } from '/zephyr/toolbar.js';
+    import * as rdf from '/rdflib/rdflib.min.js';
     import { createButton, turnOtherButtonsOff } from "/zephyr/helpers/elements.js";
 
     function onWindowResize() {
@@ -34,16 +36,79 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
       camera.updateProjectionMatrix();
     }
+    
+    const store = $rdf.graph();
+    const fetcher = new $rdf.Fetcher(store);
+    const timeout = 5000; // 5 seconds timeout
+    const endpoint = 'https://localhost:8888/sparql';
+    const turtleData2 = `
+        @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+        @prefix : <http://example.org/> .
+
+        :alice a foaf:Person ;
+            foaf:name "Alice Smith" ;
+            foaf:age 30 ;
+            foaf:knows :bob .
+
+        :bob a foaf:Person ;
+            foaf:name "Bob Johnson" ;
+            foaf:age 25 .
+        `;
+    
+    const turtleData = `
+        @prefix zeph: <https://halcyon.is/zephyr/ns/> .
+        @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+        <stack/1> a zeph:Stack ;
+            zeph:layers (
+                [ zeph:src <Stack0.tif> ]
+                [ zeph:src <Stack1.tif> ]
+                [ zeph:src <Stack2.tif> ]
+                [ zeph:src <Stack3.tif> ]
+                [ zeph:src <Stack4.tif> ]
+                [ zeph:src <Stack5.tif> ]
+            ) .
+        `;
+
+        function parseTurtle() {
+            const baseURI = 'https://localhost:8888/lws/';
+            try {
+                $rdf.parse(turtleData, store, baseURI, 'text/turtle');
+                queryGraph();
+            } catch (err) {
+                console.error('Error parsing Turtle:', err);
+                document.getElementById('output').innerText = 'Error parsing Turtle: ' + err.message;
+            }
+        }
+
+        function queryGraph() {
+            const output = document.getElementById('output');
+            output.innerHTML = '<h2>Query Results:</h2>';
+            const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+            const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
+            const stacks = store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
+            //let serializedGraph = '';
+            //serializedGraph = $rdf.serialize(null, store, 'https://localhost:8888/lws/', 'text/turtle');
+            //console.log("--- Serialized Turtle Output ---");
+            //console.log(serializedGraph);
+            stacks.forEach(stack => {
+                const layers = store.match(stack.subject, zeph('layers'), null);
+                const layerList = layers[0].object.elements;
+                layerList.forEach(layerName => {
+                    const image = store.match(layerName, zeph('src'), null);
+                    console.log("Image : "+ image[0].object.value);     
+                });
+                //const knows = store.any(person, foaf('knows'));
+               // output.innerHTML += `<p>Stack: ${layers}<br>`;
+//                output.innerHTML += `<p>Stack: ${layers.value}<br>` +
+  //                                 `Age: ${age ? age.value : 'unknown'}<br>` +
+    //                               `Knows: ${knows ? knows.value.split('/').pop() : 'none'}</p>`;
+            });
+        }
+        
+        window.onload = parseTurtle;
 
     THREE.Cache.enabled = true;
     const scene = new THREE.Scene();
-    // const camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, -10, 100 );
-    // camera.position.set(0, 0, 150000);
-    // camera.position.set(0, 0, 1250);
-    // const camera = window._camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 150000);
-
-    // const camera = window._camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 500000);
-    // camera.position.z = 300000;
 
     const camera = window._camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 80000);
     camera.position.z = 71000;
@@ -68,57 +133,6 @@
     ZEPHYR.DrawAxis(scene);
     console.log(options);
     
-    /*
-    let bremer = createButton({
-        id: "bremerpolygon",
-        innerHtml: "<i class=\"fa-solid fa-draw-polygon\"> WTF</i>",
-        title: "Bremer Polygon"
-    });
-    
-    let myDiv = document.createElement("div");
-    myDiv.style.width = '100%';
-    myDiv.style.color = 'lightblue';
-    myDiv.style.margin = '0';
-    //myDiv.style.height = '100%';
-    let canvas = document.querySelector('canvas');
-    document.body.insertBefore(myDiv, canvas);
-    
-    let myButton = document.createElement("button");
-    myButton.id = "BREMER2";
-    myButton.innerHTML = "<i class=\"fa-solid fa-bars\"></i>";
-    myButton.title = "BREMER KHAN!";
-    myButton.classList.add("annotationBtn");
-    myButton.addEventListener('click', () => {
-        alert('Button clicked!');
-    });
-    
-    myDiv.appendChild(myButton);
-    
-    
-    let myButton2 = document.createElement("button");
-    myButton2.id = "BREMER2";
-    myButton2.innerHTML = "KHAN!";
-    myButton2.title = "BREMER KHAN!";
-    myButton2.classList.add("annotationBtn");
-    myButton2.addEventListener('click', () => {
-        alert('Button clicked222!');
-    });
-    myButton2.style = "position: absolute; right: 0;";
-    myDiv.appendChild(myButton2);
-    
-    let slider = document.createElement("input");
-    slider.id = "slider123";
-    slider.type = "range";
-    slider.min = "1";
-    slider.max = "100";
-    slider.classList.add("annotationBtn");
-    slider.addEventListener('input', (event) => {
-        console.log(`Final value selected: ${event.target.value}`);
-    });
-    
-    myDiv.appendChild(slider);
-    
-    */
     
     
     ZEPHYR.CreateStackViewer(renderer, scene,
@@ -134,40 +148,12 @@
     0);
 
     // JSON config, in practice this would be fetched from the server
-    console.log("SETTING CONFIG 4 ==============================================================");
+    //console.log("SETTING CONFIG 4 ==============================================================");
     
     // Initialize toolbar with config
     toolbar(scene, camera, renderer, controls, originalZ, config);
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
-
-    // function onMouseClick2(event) {
-    //   console.log("CLICK!!!");
-    //   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    //   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    //   raycaster.setFromCamera(mouse, camera);
-    //   const intersects = raycaster.intersectObjects(scene.children);
-    //   if (intersects.length > 0) {
-    //     console.log('Intersection:', intersects[0]);
-    //     intersects[0].object.material.color.set(0xff0000);
-    //   }
-    // }
-
-    // function onMouseClick(event) {
-    //   // Calculate mouse position in normalized device coordinates (-1 to +1)
-    //   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    //   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    //   // Unproject the mouse coordinates to get the world position
-    //   const mouseVector = new THREE.Vector3(mouse.x, mouse.y, 0.5).unproject(camera);
-    //   // Set the raycaster origin and direction
-    //   raycaster.set(camera.position, mouseVector.sub(camera.position).normalize());
-    //   const intersects = raycaster.intersectObjects(scene.children);
-    //   if (intersects.length > 0) {
-    //     console.log('Intersection:', intersects[0]);
-    //     intersects[0].object.material.color.set(0xff0000);  // Example: Change the color of the intersected object
-    //   }
-    // }
-    // window.addEventListener('click', onMouseClick, false);
 
     function animate() {
       controls.update();
