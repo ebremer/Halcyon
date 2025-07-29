@@ -17,7 +17,8 @@
         "imports": {
             "three": "/threejs/build/three.module.js",
             "three/addons/": "/threejs/examples/jsm/",
-            "zephyr": "/zephyr/zephyr.js"
+            "zephyr": "/zephyr/zephyr.js",
+            "zephyrRDF": "/zephyr/zephyrRDF.js"
         }
     }
   </script>
@@ -27,6 +28,7 @@
     import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
     import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
     import * as ZEPHYR from 'zephyr';
+    import * as ZEPHRDF from 'zephyrRDF';
     import { toolbar } from '/zephyr/toolbar.js';
     import * as rdf from '/rdflib/rdflib.min.js';
     import { createButton, turnOtherButtonsOff } from "/zephyr/helpers/elements.js";
@@ -41,19 +43,7 @@
     const fetcher = new $rdf.Fetcher(store);
     const timeout = 5000; // 5 seconds timeout
     const endpoint = 'https://localhost:8888/sparql';
-    const turtleData2 = `
-        @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-        @prefix : <http://example.org/> .
-
-        :alice a foaf:Person ;
-            foaf:name "Alice Smith" ;
-            foaf:age 30 ;
-            foaf:knows :bob .
-
-        :bob a foaf:Person ;
-            foaf:name "Bob Johnson" ;
-            foaf:age 25 .
-        `;
+    const baseURI = 'https://localhost:8888/lws/';
     
     const turtleData = `
         @prefix zeph: <https://halcyon.is/zephyr/ns/> .
@@ -69,27 +59,12 @@
             ) .
         `;
 
-        function parseTurtle() {
-            const baseURI = 'https://localhost:8888/lws/';
-            try {
-                $rdf.parse(turtleData, store, baseURI, 'text/turtle');
-                queryGraph();
-            } catch (err) {
-                console.error('Error parsing Turtle:', err);
-                document.getElementById('output').innerText = 'Error parsing Turtle: ' + err.message;
-            }
-        }
-
-        function queryGraph() {
-            const output = document.getElementById('output');
-            output.innerHTML = '<h2>Query Results:</h2>';
-            const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
-            const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
+    function queryGraph() {
+        const output = document.getElementById('output');        
+        output.innerHTML = '<h2>Query Results:</h2>';
+        const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+        const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
             const stacks = store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
-            //let serializedGraph = '';
-            //serializedGraph = $rdf.serialize(null, store, 'https://localhost:8888/lws/', 'text/turtle');
-            //console.log("--- Serialized Turtle Output ---");
-            //console.log(serializedGraph);
             stacks.forEach(stack => {
                 const layers = store.match(stack.subject, zeph('layers'), null);
                 const layerList = layers[0].object.elements;
@@ -102,7 +77,16 @@
             });
         }
         
-        window.onload = parseTurtle;
+        window.onload = function() {
+            ZEPHRDF.ParseTTL(turtleData, store, baseURI);
+            ZEPHRDF.DumpTTL(store, baseURI);
+            //queryGraph();
+            var ha = ZEPHRDF.ListElements(store, baseURI);
+            ha.forEach(e => {
+               console.log("ELEMENT : ");
+               console.log(e);
+            });
+        };
 
     THREE.Cache.enabled = true;
     const scene = new THREE.Scene();
@@ -129,8 +113,6 @@
     controls.dynamicDampingFactor = 0.2; // To offer a smooth yet responsive control feel
     ZEPHYR.DrawAxis(scene);
     console.log(options);
-    
-    
     
     ZEPHYR.CreateStackViewer(renderer, scene,
     [
