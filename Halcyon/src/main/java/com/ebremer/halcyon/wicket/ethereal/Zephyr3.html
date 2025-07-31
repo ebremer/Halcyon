@@ -58,30 +58,13 @@
                 [ zeph:src <Stack5.tif> ]
             ) .
         `;
-
-    function queryGraph() {
-        const output = document.getElementById('output');        
-        output.innerHTML = '<h2>Query Results:</h2>';
-        const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
-        const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
-            const stacks = store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
-            stacks.forEach(stack => {
-                const layers = store.match(stack.subject, zeph('layers'), null);
-                const layerList = layers[0].object.elements;
-                layerList.forEach(layerName => {
-                    const image = store.match(layerName, zeph('src'), null);
-                    console.log("Image : "+ image[0].object.value);     
-                });
-                //const knows = store.any(person, foaf('knows'));
-               // output.innerHTML += `<p>Stack: ${layers}<br>`;
-            });
-        }
         
         window.onload = function() {
             ZEPHRDF.ParseTTL(turtleData, store, baseURI);
             ZEPHRDF.DumpTTL(store, baseURI);
             //queryGraph();
             var ha = ZEPHRDF.ListElements(store, baseURI);
+            ZEPHRDF.ListImages(store, baseURI);
             ha.forEach(e => {
                console.log("ELEMENT : ");
                console.log(e);

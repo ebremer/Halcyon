@@ -56,4 +56,4 @@ function ListImages(store, baseURI) {
     });
 }
 
-export { ParseTTL, DumpTTL, ListElements };
+export { ParseTTL, DumpTTL, ListElements, ListImages };
