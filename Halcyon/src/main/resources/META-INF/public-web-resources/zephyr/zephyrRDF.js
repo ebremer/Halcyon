@@ -1,3 +1,7 @@
+import {
+    Stack
+} from 'zephyr';
+
 function ParseTTL(turtleData, store, baseURI) {
     try {
         $rdf.parse(turtleData, store, baseURI, 'text/turtle');
@@ -35,11 +39,11 @@ function ListElements(store, baseURI) {
     .filter(quad =>
       quad.object.termType === 'NamedNode' &&
       quad.object.value.startsWith(ZEPH_NS)
-    )
-    .map(quad => ({
-        subject: quad.subject,
-        type:    quad.object
-    }));
+    );
+    //  .map(quad => ({
+//        subject: quad.subject,
+//        type:    quad.object
+//    }));
 }
 
 function ListImages(store, baseURI) {
@@ -56,4 +60,23 @@ function ListImages(store, baseURI) {
     });
 }
 
-export { ParseTTL, DumpTTL, ListElements, ListImages };
+function Add(scene, store, statement) {
+    console.log(statement);
+    const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+    const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
+  
+    switch(statement.object.value) {
+        case zeph('Stack').value:
+            console.log("ADDING A STACK");
+            scene.add(new Stack());
+            break;
+        default:
+            console.log("NOT ADDING UNKNOWN");
+    }
+    //if (statement.object.value === zeph('Stack').value) {
+      //  console.log("ADDING A STACK");
+    //}
+
+}
+
+export { ParseTTL, DumpTTL, ListElements, ListImages, Add };

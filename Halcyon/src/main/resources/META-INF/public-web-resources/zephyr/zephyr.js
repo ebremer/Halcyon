@@ -18,6 +18,9 @@ import {
     FileLoader,
     LinearFilter,
     Box3,
+    Sprite,
+    SpriteMaterial,
+    CanvasTexture,    
     Texture,
     ShaderMaterial,
     Color,
@@ -151,7 +154,7 @@ function CreateStackViewer(renderer, scene, urls, offset) {
     stackviewer.position.z = 5000;
 }
 
-function AddImageViewer(group, url, offset) {
+function AddImageViewer(stackviewer, url, offset) {
   console.log("AddImageViewer Xc : "+url+" offset -> "+offset);
   var target = url + "/info.json";
   fetch(target)
@@ -178,7 +181,7 @@ function AddImageViewer(group, url, offset) {
             material.color.set(Math.random() * 0xffffff);
       };
       
-      group.add(lod);
+      stackviewer.addLayer(lod);
       lod.position.z = offset;
     }).catch(error => console.error('Error fetching data:', error));
 }
@@ -422,7 +425,55 @@ class FeatureViewer extends LOD {
     }
 }
 
+function addXAxis() {
+    const points = [
+        new Vector3(-100000, 0, 0),
+        new Vector3(100000, 0, 0)
+    ];    
+    const geometry = new BufferGeometry().setFromPoints(points);
+    const material = new LineBasicMaterial({ color: 0x00ff00 });
+    const line = new Line(geometry, material);
+    return line;
+}
+
+function addYAxis() {
+    const points = [
+        new Vector3(0, -100000, 0),
+        new Vector3(0, 100000, 0)
+    ];    
+    const geometry = new BufferGeometry().setFromPoints(points);
+    const material = new LineBasicMaterial({ color: 0x00ff00 });
+    const line = new Line(geometry, material);
+    return line;
+}
+
+function addZAxis() {
+    const points = [
+        new Vector3(0, 0, -100000),
+        new Vector3(0, 0, 100000)
+    ];    
+    const geometry = new BufferGeometry().setFromPoints(points);
+    const material = new LineBasicMaterial({ color: 0x00ff00 });
+    const line = new Line(geometry, material);
+    return line;
+}
+
+function MakeText(text) {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = 'Bold 48px Arial';
+    context.fillStyle = 'white';
+    context.fillText(text, 50, 50);
+    const texture = new CanvasTexture(canvas);
+    const material = new SpriteMaterial({ map: texture });
+    const sprite = new Sprite(material);
+    sprite.scale.set(10000, 10000, 10000); // Adjust size
+    return sprite;
+}
+
 class StackViewer extends Object3D {
+    
+    elayers = [];
     
     createUX() {
         let myDiv = document.createElement("div");
@@ -452,6 +503,10 @@ class StackViewer extends Object3D {
         this.type = 'StackViewer';
         this.spacing = 1.0;        
         this.createUX();
+        this.add(addXAxis());
+        this.add(addYAxis());
+        this.add(addZAxis());
+        this.add(MakeText('Axis Control'));
     }
     
     setSpacing( value ) {
@@ -459,8 +514,17 @@ class StackViewer extends Object3D {
     }
     
     addLayer( object ) {
+        this.elayers.push( object );
+        this.add( object );
+    }
+}
+
+class Stack extends Object3D {
+    constructor() {
+        super();
+        this.add(MakeText("HARK!!!"));
         
     }
 }
 
-export { Square, CreateImageViewer, CreateStackViewer, CreateFeatureViewer, createPolygon, DrawAxis };
+export { Square, CreateImageViewer, CreateStackViewer, CreateFeatureViewer, createPolygon, DrawAxis, Stack };
