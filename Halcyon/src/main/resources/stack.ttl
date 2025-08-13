@@ -2,11 +2,20 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 <stack/1> a zeph:Stack ;
     zeph:layers (
-        [ zeph:src <Stack0.tif> ]
+        [ zeph:src <Stack110.tif> ]
         [ zeph:src <Stack1.tif> ]
         [ zeph:src <Stack2.tif> ]
         [ zeph:src <Stack3.tif> ]
         [ zeph:src <Stack4.tif> ]
         [ zeph:src <Stack5.tif> ]
+        [ zeph:src <Stack6.tif> ]
     ) .
+
+<Stack0.tif> exif:width 10220; exif:height 8570 .
+<Stack1.tif> exif:width 10220; exif:height 8570 .
+<Stack2.tif> exif:width 10220; exif:height 8570 .
+<Stack3.tif> exif:width 10220; exif:height 8570 .
+<Stack4.tif> exif:width 10220; exif:height 8570 .
+<Stack5.tif> exif:width 10220; exif:height 8570 .
+<Stack6.tif> exif:width 10220; exif:height 8570 .
 

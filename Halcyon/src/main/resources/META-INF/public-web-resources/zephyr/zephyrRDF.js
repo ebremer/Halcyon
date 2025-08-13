@@ -1,4 +1,8 @@
 import {
+    Scene
+} from 'three';
+
+import {
     Stack
 } from 'zephyr';
 
@@ -46,8 +50,7 @@ function ListElements(store, baseURI) {
 //    }));
 }
 
-function ListImages(store, baseURI) {
-    const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+function ListImages2(store, stack) {
     const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
     const stacks = store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
     stacks.forEach(stack => {
@@ -60,6 +63,21 @@ function ListImages(store, baseURI) {
     });
 }
 
+function ListImages(store, baseURI) {
+    const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
+    const stacks = store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
+    stacks.forEach(stack => {
+        const layers = store.match(stack.subject, zeph('layers'), null);
+        const layerList = layers[0].object.elements;
+        layerList.forEach(layerName => {
+            const image = store.match(layerName, zeph('src'), null);
+            console.log("Image : "+ image[0].object.value);     
+        });
+    });
+}
+
+
+/*
 function Add(scene, store, statement) {
     console.log(statement);
     const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
@@ -77,6 +95,37 @@ function Add(scene, store, statement) {
       //  console.log("ADDING A STACK");
     //}
 
+}*/
+
+class WE {
+    foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+    zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
+    
+    constructor(scene, store) {
+        this.scene = scene;
+        this.store = store;
+    }
+    
+    getStore() {
+        return this.store;
+    }
+    
+    getScene() {
+        return this.scene;
+    }
+    
+    add( statement ) {
+        console.log("WE.add()");
+        console.log(statement);
+        switch(statement.object.value) {
+            case this.zeph('Stack').value:
+                console.log("ADDING A STACK");
+                this.scene.add(new Stack(this, statement));
+                break;
+            default:
+                console.log("NOT ADDING UNKNOWN");
+        }
+    }
 }
 
-export { ParseTTL, DumpTTL, ListElements, ListImages, Add };
+export { ParseTTL, DumpTTL, ListElements, ListImages, WE };

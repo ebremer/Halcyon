@@ -48,31 +48,43 @@
     const turtleData = `
         @prefix zeph: <https://halcyon.is/zephyr/ns/> .
         @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+        @prefix exif: <https://www.w3.org/2003/12/exif/ns#> .
         <stack/1> a zeph:Stack ;
             zeph:layers (
-                [ zeph:src <Stack0.tif> ]
-                [ zeph:src <Stack1.tif> ]
-                [ zeph:src <Stack2.tif> ]
-                [ zeph:src <Stack3.tif> ]
-                [ zeph:src <Stack4.tif> ]
-                [ zeph:src <Stack5.tif> ]
+                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif> ]
+                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif> ]
+                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif> ]
+                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack3.tif> ]
+                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif> ]
+                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif> ]
+                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack6.tif> ]
             ) .
+        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif> exif:width 10220; exif:height 8570 .
+        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif> exif:width 10220; exif:height 8570 .
+        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif> exif:width 10220; exif:height 8570 .
+        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack3.tif> exif:width 10220; exif:height 8570 .
+        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif> exif:width 10220; exif:height 8570 .
+        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif> exif:width 10220; exif:height 8570 .
+        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack6.tif> exif:width 10220; exif:height 8570 .
         `;
+                
         
         window.onload = function() {
             ZEPHRDF.ParseTTL(turtleData, store, baseURI);
-            //ZEPHRDF.DumpTTL(store, baseURI);
+            ZEPHRDF.DumpTTL(store, baseURI);
             var ha = ZEPHRDF.ListElements(store, baseURI);
             ZEPHRDF.ListImages(store, baseURI);
             ha.forEach(e => {               
                console.log("ELEMENT : ");
                console.log(e);
-               ZEPHRDF.Add(scene, store, e);
+               //ZEPHRDF.Add(scene, store, e);
+               we.add(e);
             });
         };
 
     THREE.Cache.enabled = true;
     const scene = new THREE.Scene();
+    const we = new ZEPHRDF.WE(scene,store);
 
     const camera = window._camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 1, 80000);
     camera.position.z = 71000;
@@ -115,10 +127,7 @@
     // Initialize toolbar with config
     toolbar(scene, camera, renderer, controls, originalZ, config);
     const raycaster = new THREE.Raycaster();
-    const mouse = new THREE.Vector2();
-    
-    // Create Scene Objects from RDF Graph
-    
+    const mouse = new THREE.Vector2();    
     
 
     function animate() {

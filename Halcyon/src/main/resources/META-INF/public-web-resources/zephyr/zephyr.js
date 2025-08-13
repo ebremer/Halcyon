@@ -296,9 +296,9 @@ class ImageViewer extends LOD {
     }
 }
 
+/*
 function CreateFeatureViewer(renderer, scene, url, offset) {
-    //   console.log("Running CreateFeatureViewer");
-    /*
+    //   console.log("Running CreateFeatureViewer");    
     Cache.enabled = true;
     var target = url + "/info.json";
     fetch(target)
@@ -322,8 +322,8 @@ function CreateFeatureViewer(renderer, scene, url, offset) {
             // lod.position.y = 100;
             lod.position.z = 1;
         }).catch(error => console.error('Error fetching data:', error));
-     */
-}
+     
+}*/
 
 class FeatureViewer extends LOD {
     constructor(renderer, scene, url, x, y, w, h, tilex, tiley, offset, info, level) {
@@ -433,6 +433,9 @@ function addXAxis() {
     const geometry = new BufferGeometry().setFromPoints(points);
     const material = new LineBasicMaterial({ color: 0x00ff00 });
     const line = new Line(geometry, material);
+    const label = MakeText("X");   
+    label.position.x = 20000;    
+    line.add(label);
     return line;
 }
 
@@ -444,6 +447,9 @@ function addYAxis() {
     const geometry = new BufferGeometry().setFromPoints(points);
     const material = new LineBasicMaterial({ color: 0x00ff00 });
     const line = new Line(geometry, material);
+    const label = MakeText("Y");   
+    label.position.y = 20000;    
+    line.add(label);    
     return line;
 }
 
@@ -455,6 +461,9 @@ function addZAxis() {
     const geometry = new BufferGeometry().setFromPoints(points);
     const material = new LineBasicMaterial({ color: 0x00ff00 });
     const line = new Line(geometry, material);
+    const label = MakeText("Z");
+    label.position.z = 20000;    
+    line.add(label);
     return line;
 }
 
@@ -471,6 +480,7 @@ function MakeText(text) {
     return sprite;
 }
 
+/*
 class StackViewer extends Object3D {
     
     elayers = [];
@@ -517,14 +527,88 @@ class StackViewer extends Object3D {
         this.elayers.push( object );
         this.add( object );
     }
-}
+}*/
 
 class Stack extends Object3D {
-    constructor() {
-        super();
-        this.add(MakeText("HARK!!!"));
-        
+    
+    elayers = [];
+    
+    createUX() {
+        let myDiv = document.createElement("div");
+        myDiv.style.width = '100%';
+        myDiv.style.color = 'lightblue';
+        myDiv.style.margin = '0';
+        let canvas = document.querySelector('canvas');
+        document.body.insertBefore(myDiv, canvas);
+                
+        let slider = document.createElement("input");
+        slider.id = "slider123";
+        slider.type = "range";
+        slider.min = "1";
+        slider.value = 10;
+        slider.max = "100";
+        this.offset = 0;
+        slider.classList.add("annotationBtn");
+        slider.addEventListener('input', (event) => {
+            console.log(`Final value selected: ${event.target.value}`);
+            this.scale.z = (event.target.value / 10);
+        });    
+        myDiv.appendChild(slider);
+        console.log("StackViewer ID : "+this.id);
     }
+    
+    constructor(we, statement) {
+        super();
+        this.store = we.getStore();        
+        this.type = 'StackViewer';
+        this.spacing = 1.0;        
+        this.createUX();
+        this.add(addXAxis());
+        this.add(addYAxis());
+        this.add(addZAxis());
+        //this.add(MakeText('XYZ'));        
+        this.ListImages(statement.subject);
+    }
+    
+    setSpacing( value ) {
+        this.spacing = value;
+    }
+    
+    addLayer( object ) {
+        this.elayers.push( object );
+        this.add( object );
+    }
+
+    ListImages(subject) {
+        console.log("LIST IMAGES ==========================");
+        const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
+        const layers = this.store.match(subject, zeph('layers'), null);
+        const layerList = layers[0].object.elements;
+        layerList.forEach(layerName => {
+            const image = this.store.match(layerName, zeph('src'), null);
+            const ii = image[0].object.value;
+            console.log("Image : "+ ii);
+            AddImageViewer(this, ii, this.offset);
+            this.offset = this.offset + 2000;
+        });
+    }
+    /*
+    ListImages2(subject) {
+        console.log("LIST IMAGES ==========================");
+        const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
+        const stacks = this.store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
+        stacks.forEach(stack => {
+            const layers = this.store.match(stack.subject, zeph('layers'), null);
+            const layerList = layers[0].object.elements;
+            layerList.forEach(layerName => {
+                const image = this.store.match(layerName, zeph('src'), null);
+                const ii = image[0].object.value;
+                console.log("Image : "+ ii);
+                AddImageViewer(this, ii, this.offset);
+                this.offset = this.offset + 2000;
+            });
+        });
+    }*/
 }
 
-export { Square, CreateImageViewer, CreateStackViewer, CreateFeatureViewer, createPolygon, DrawAxis, Stack };
+export { Square, CreateImageViewer, CreateStackViewer, createPolygon, DrawAxis, Stack };
