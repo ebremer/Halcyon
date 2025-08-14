@@ -118,15 +118,13 @@ public class DirectoryProcessor {
                             logger.info("Processing ---> "+fx+"  "+httpuri.toString());
                             Model m = ModelFactory.createDefaultModel();
                             Resource r = m.createResource(httpuri.toString());
-                            r
-                                .addProperty(RDF.type, LDP.NonRDFSource)
-                                .addProperty(RDF.type, SchemaDO.ImageObject)
-                                .addProperty(OWL.sameAs, m.createResource(HURI.of(fx).toString()));
+                            r.addProperty(OWL.sameAs, m.createResource(HURI.of(fx).toString()));
                             File file = fx.toFile();
                             FileReaderFactory frf = FileReaderFactoryProvider.getReaderForFormat(r);
                             logger.trace("Reader {}", frf);
                             try (FileReader fr = frf.create(fx.toUri(), httpuri)){
-                                Model xxx = fr.getMeta(httpuri);
+                                //Model xxx = fr.getMeta(httpuri);
+                                Model xxx = fr.getMeta();
                                 m.add(xxx);
                                 if (fr instanceof ImageReader) {
                                     m.add(r, SchemaDO.fileFormat, FileUtils.getExtension(fr.getFormat()));

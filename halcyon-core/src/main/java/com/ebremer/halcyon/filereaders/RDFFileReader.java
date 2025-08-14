@@ -1,5 +1,6 @@
 package com.ebremer.halcyon.filereaders;
 
+import com.ebremer.ns.LDP;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +15,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFParser;
+import org.apache.jena.vocabulary.RDF;
 
 /**
  *
@@ -48,6 +50,8 @@ public class RDFFileReader extends AbstractFileReader {
         m = ModelFactory.createDefaultModel();
         File file = new File(uri);
         String baseURI = uri.toString();        
+        m.createResource(baseURI)
+                .addProperty(RDF.type, LDP.RDFSource);
         Lang lang = getLangFromUri(uri);
         try (FileInputStream fis = new FileInputStream(file)) {            
             RDFParser.create()

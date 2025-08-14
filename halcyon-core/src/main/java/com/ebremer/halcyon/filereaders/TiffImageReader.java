@@ -7,6 +7,7 @@ import com.ebremer.halcyon.lib.XMP;
 import com.ebremer.halcyon.utils.ImageTools;
 import com.ebremer.ns.EXIF;
 import com.ebremer.ns.HAL;
+import com.ebremer.ns.LDP;
 import com.twelvemonkeys.imageio.metadata.Entry;
 import com.twelvemonkeys.imageio.metadata.tiff.Rational;
 import com.twelvemonkeys.imageio.metadata.tiff.TIFF;
@@ -28,6 +29,7 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
@@ -110,7 +112,8 @@ public class TiffImageReader extends AbstractImageReader {
         m.setNsPrefix("sdo", SchemaDO.NS);
         m.setNsPrefix("hal", HAL.NS);
         m.setNsPrefix("xsd", XSD.getURI());
-        Resource root = m.createResource(URITools.fix(xuri))                
+        Resource root = m.createResource(URITools.fix(xuri))
+            .addProperty(RDF.type, LDP.NonRDFSource)
             .addLiteral(HAL.filemetaversion, m.createTypedLiteral( METAVERSION, XSD.integer.getURI()))
             .addLiteral(EXIF.width, m.createTypedLiteral(meta.getWidth(), XSD.integer.getURI()))
             .addLiteral(EXIF.height, m.createTypedLiteral(meta.getHeight(), XSD.integer.getURI()))

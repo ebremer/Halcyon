@@ -13,8 +13,7 @@ public class RDFFileReaderFactory implements FileReaderFactory {
 
     @Override
     public FileReader create(URI uri, URI base) {
-        return new RDFFileReader(uri);
-    
+        return new RDFFileReader(uri);    
     }
     
     @Override
