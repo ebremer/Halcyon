@@ -136,14 +136,15 @@ public class Main {
         logger.info("Starting Halcyon...");
         INIT i = new INIT();
         i.init();
-        DataCore dc = DataCore.getInstance();
-        Dataset ds = dc.getDataset();        
-        ds.begin(ReadWrite.WRITE);
-        ds.removeNamedModel("https://localhost:8888/stack");
-        Stack stack = new Stack();
-        ds.addNamedModel("https://localhost:8888/stack", stack.getModel());
-        ds.commit();
-        ds.end();
+        //DataCore dc = DataCore.getInstance();
+        //Dataset ds = dc.getDataset();        
+        //ds.begin(ReadWrite.WRITE);
+        //ds.removeNamedModel("https://localhost:8888/stack");
+        //Stack stack = new Stack();
+        //ds.removeNamedModel("https://localhost:8888/stack");
+        //ds.addNamedModel("https://localhost:8888/stack", stack.getModel());
+        //ds.commit();
+        //ds.end();
         if (!(System.getProperty("spring.aot.processing") != null)) {
             SPARQLEndPoint.getSPARQLEndPoint();
         }    
