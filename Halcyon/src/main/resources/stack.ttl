@@ -1,7 +1,7 @@
 @prefix exif: <https://www.w3.org/2003/12/exif/ns#> .
 @prefix zeph: <https://halcyon.is/zephyr/ns/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-<stack/1>
+<>
     a zeph:Stack ;
     zeph:layers (
         [ zeph:src <Stack0.tif> ]

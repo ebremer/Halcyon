@@ -81,8 +81,8 @@
         <springboot.version>3.4.3</springboot.version>
 	<resteasy.version>6.2.11.Final</resteasy.version>
         <jetty.version>12.0.16</jetty.version>
-        <jena.version>5.4.0</jena.version>
-        <wicket.ver>10.5.0</wicket.ver>
+        <jena.version>5.5.0</jena.version>
+        <wicket.ver>10.6.0</wicket.ver>
         <beakgraph.version>0.9.0</beakgraph.version>        
         <hilbert.ver>0.2.3</hilbert.ver>
         <commons-pool2.ver>2.12.1</commons-pool2.ver>

@@ -1,17 +1,9 @@
 package com.ebremer.halcyon.wicket.ethereal;
 
-import com.ebremer.halcyon.data.DataCore;
 import com.ebremer.halcyon.datum.HalcyonPrincipal;
 import com.ebremer.halcyon.gui.HalcyonSession;
 import com.ebremer.halcyon.wicket.BasePage;
 import com.ebremer.vandegraph.dev.Stack;
-import java.io.StringWriter;
-import org.apache.jena.query.Dataset;
-import org.apache.jena.query.ReadWrite;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 
@@ -68,13 +60,10 @@ public class Zephyr3 extends BasePage {
         //ds.begin(ReadWrite.READ);
         //m.add(ds.getNamedModel("https://localhost:8888/stack"));
         //ds.end();
-        StringWriter out = new StringWriter();
         Stack stack = new Stack();
-        Model m = stack.getModel();
-        System.out.println("==================================== START ===============================================");
-        System.out.println(EthTool.serialize(m, "https://localhost:8888/ldp/utah/HnE/Stack2/"));
-        System.out.println("====================================  END  ===============================================");
-        RDFDataMgr.write(out, m, Lang.TURTLE);
-        response.render(JavaScriptHeaderItem.forScript("var scenegraph = `\n"+out.toString()+"\n`;", "scenegraph"));
+        //System.out.println("==================================== START ===============================================");
+        //System.out.println(EthTool.serialize(m, "https://localhost:8888/ldp/utah/HnE/Stack2/"));
+        //System.out.println("====================================  END  ===============================================");
+        response.render(JavaScriptHeaderItem.forScript("var scenegraph = `\n"+EthTool.serialize(stack.getModel(), "https://localhost:8888/ldp/utah/HnE/Stack2/")+"\n`;", "scenegraph"));
     }
 }

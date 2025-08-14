@@ -43,50 +43,17 @@
     const fetcher = new $rdf.Fetcher(store);
     const timeout = 5000; // 5 seconds timeout
     const endpoint = 'https://localhost:8888/sparql';
-    const baseURI = 'https://dummy.com/';
-    
-    /*
-    const turtleData = `
-        @prefix zeph: <https://halcyon.is/zephyr/ns/> .
-        @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-        @prefix exif: <https://www.w3.org/2003/12/exif/ns#> .
-        <stack/1> a zeph:Stack ;
-            zeph:layers (
-                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif> ]
-                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif> ]
-                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif> ]
-                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack3.tif> ]
-                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif> ]
-                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif> ]
-                [ zeph:src <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack6.tif> ]
-            ) .
-        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif> exif:width 10220; exif:height 8570 .
-        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif> exif:width 10220; exif:height 8570 .
-        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif> exif:width 10220; exif:height 8570 .
-        <Stack3.tif> exif:width 10220; exif:height 8570 .
-        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif> exif:width 10220; exif:height 8570 .
-        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif> exif:width 10220; exif:height 8570 .
-        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack6.tif> exif:width 10220; exif:height 8570 .
-        `;
-           */     
+    const baseURI = 'https://localhost:8888/ldp/utah/HnE/Stack2/';
         
-        window.onload = function() {
-            console.log("=========================== THE DATA =============================================");
-            console.log(scenegraph);
-            console.log("=========================== END OF THE DATA =============================================");
-            ZEPHRDF.ParseTTL(scenegraph, store, baseURI);
-            //ZEPHRDF.ParseTTL(scenegraph, store);
-            ZEPHRDF.DumpTTL(store, baseURI);
-            //ZEPHRDF.DumpTTL(store);
-            var ha = ZEPHRDF.ListElements(store, baseURI);
-            ZEPHRDF.ListImages(store, baseURI);
-            ha.forEach(e => {               
-               console.log("ELEMENT : ");
-               console.log(e);
-               //ZEPHRDF.Add(scene, store, e);
-               we.add(e);
-            });
-        };
+    window.onload = function() {
+        ZEPHRDF.ParseTTL(scenegraph, store, baseURI);
+        ZEPHRDF.DumpTTL(store, baseURI);
+        var ha = ZEPHRDF.ListElements(store, baseURI);
+        ZEPHRDF.ListImages(store, baseURI);
+        ha.forEach(e => {               
+            we.add(e);
+        });
+    };
 
     THREE.Cache.enabled = true;
     const scene = new THREE.Scene();
@@ -102,7 +69,7 @@
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       preserveDrawingBuffer: true // Preserve the drawing buffer to capture the image later
-    });  //335.74
+    });
 
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -114,21 +81,6 @@
     controls.dynamicDampingFactor = 0.2; // To offer a smooth yet responsive control feel
     ZEPHYR.DrawAxis(scene);
     console.log(options);
-    
-    /*
-    ZEPHYR.CreateStackViewer(renderer, scene,
-    [
-        "https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif",
-        "https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif",
-        "https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif",
-        "https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack3.tif",
-        "https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif",
-        "https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif",
-        "https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack6.tif"
-    ],  
-    0);
-     
-     */
     
     // Initialize toolbar with config
     toolbar(scene, camera, renderer, controls, originalZ, config);

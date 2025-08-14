@@ -45,7 +45,7 @@ function srcurl(src, x, y, w, h, tilex, tiley, scale, name) {
         newTexture.needsUpdate = true;
         return newTexture;
     } else {
-        const ha = `${src}/${x},${y},${a},${b}/!${m},${n}/0/default.png`;
+        const ha = `/iiif/?iiif=${src}/${x},${y},${a},${b}/!${m},${n}/0/default.png`;
         return new TextureLoader().load(ha,
             (texture) => {
                 // if ( texture.image.width !== texture.image.height ) {
@@ -154,7 +154,7 @@ function CreateStackViewer(renderer, scene, urls, offset) {
 
 function AddImageViewer(stackviewer, url, offset) {
   console.log("AddImageViewer Xc : "+url+" offset -> "+offset);
-  var target = url + "/info.json";
+  var target = "/iiif/?iiif=" + url + "/info.json";
   fetch(target)
     .then(response => response.json())
     .then(data => {
@@ -185,7 +185,7 @@ function AddImageViewer(stackviewer, url, offset) {
 }
 
 function CreateImageViewer(renderer, scene, url, offset) {
-    var target = url + "/info.json";
+    var target = "/iiif/?iiif=" + url + "/info.json";
     fetch(target)
         .then(response => response.json())
         .then(data => {
