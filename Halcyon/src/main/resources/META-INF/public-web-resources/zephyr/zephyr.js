@@ -30,7 +30,6 @@ import {
 } from 'three';
 
 function srcurl(src, x, y, w, h, tilex, tiley, scale, name) {
-    // if (name.startsWith("ROOT/SE/")) console.log("      Image( "+name+" "+x+" "+y+" "+w+" "+h+" "+tilex+" "+tiley+" "+scale+" )");
     const a = Math.trunc(w);
     const b = Math.trunc(h);
     const m = Math.trunc(Math.round(w * scale));
@@ -59,7 +58,6 @@ function srcurl(src, x, y, w, h, tilex, tiley, scale, name) {
                 texture.needsUpdate = true;
                 const wratio = tilex / texture.image.width;
                 const hratio = tiley / texture.image.height;
-                //  console.log("RATIO : "+wratio+" "+hratio+"      "+texture.image.width+" "+texture.image.height+" "+tilex+" "+tiley+"  "+scale);
                 texture.repeat.set(wratio, hratio);
                 texture.offset.set(0, 1 - hratio);
                 //}
@@ -296,35 +294,6 @@ class ImageViewer extends LOD {
     }
 }
 
-/*
-function CreateFeatureViewer(renderer, scene, url, offset) {
-    //   console.log("Running CreateFeatureViewer");    
-    Cache.enabled = true;
-    var target = url + "/info.json";
-    fetch(target)
-        .then(response => response.json())
-        .then(data => {
-            const x = 0;
-            const y = 0;
-            const w = data.width;
-            const h = data.height;
-            const offset = 0;
-            const tilex = data.tiles[0].width;
-            const tiley = data.tiles[0].height;
-            const lod = new FeatureViewer(renderer, scene, url, x, y, w, h, tilex, tiley, offset, data, 0);
-            lod.name = "FeatureViewer";
-            lod.imageWidth = w;
-            lod.imageHeight = h;
-            lod.url = url;
-            lod.frustrumCulled = false;
-            scene.add(lod);
-            // lod.position.x = 100;
-            // lod.position.y = 100;
-            lod.position.z = 1;
-        }).catch(error => console.error('Error fetching data:', error));
-     
-}*/
-
 class FeatureViewer extends LOD {
     constructor(renderer, scene, url, x, y, w, h, tilex, tiley, offset, info, level) {
         super();
@@ -480,55 +449,6 @@ function MakeText(text) {
     return sprite;
 }
 
-/*
-class StackViewer extends Object3D {
-    
-    elayers = [];
-    
-    createUX() {
-        let myDiv = document.createElement("div");
-        myDiv.style.width = '100%';
-        myDiv.style.color = 'lightblue';
-        myDiv.style.margin = '0';
-        let canvas = document.querySelector('canvas');
-        document.body.insertBefore(myDiv, canvas);
-                
-        let slider = document.createElement("input");
-        slider.id = "slider123";
-        slider.type = "range";
-        slider.min = "1";
-        slider.value = 10;
-        slider.max = "100";
-        slider.classList.add("annotationBtn");
-        slider.addEventListener('input', (event) => {
-            console.log(`Final value selected: ${event.target.value}`);
-            this.scale.z = (event.target.value / 10);
-        });    
-        myDiv.appendChild(slider);
-        console.log("StackViewer ID : "+this.id);
-    }
-    
-    constructor() {
-        super();
-        this.type = 'StackViewer';
-        this.spacing = 1.0;        
-        this.createUX();
-        this.add(addXAxis());
-        this.add(addYAxis());
-        this.add(addZAxis());
-        this.add(MakeText('Axis Control'));
-    }
-    
-    setSpacing( value ) {
-        this.spacing = value;
-    }
-    
-    addLayer( object ) {
-        this.elayers.push( object );
-        this.add( object );
-    }
-}*/
-
 class Stack extends Object3D {
     
     elayers = [];
@@ -539,8 +459,7 @@ class Stack extends Object3D {
         myDiv.style.color = 'lightblue';
         myDiv.style.margin = '0';
         let canvas = document.querySelector('canvas');
-        document.body.insertBefore(myDiv, canvas);
-                
+        document.body.insertBefore(myDiv, canvas);                
         let slider = document.createElement("input");
         slider.id = "slider123";
         slider.type = "range";
@@ -592,23 +511,6 @@ class Stack extends Object3D {
             this.offset = this.offset + 2000;
         });
     }
-    /*
-    ListImages2(subject) {
-        console.log("LIST IMAGES ==========================");
-        const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
-        const stacks = this.store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
-        stacks.forEach(stack => {
-            const layers = this.store.match(stack.subject, zeph('layers'), null);
-            const layerList = layers[0].object.elements;
-            layerList.forEach(layerName => {
-                const image = this.store.match(layerName, zeph('src'), null);
-                const ii = image[0].object.value;
-                console.log("Image : "+ ii);
-                AddImageViewer(this, ii, this.offset);
-                this.offset = this.offset + 2000;
-            });
-        });
-    }*/
 }
 
 export { Square, CreateImageViewer, CreateStackViewer, createPolygon, DrawAxis, Stack };

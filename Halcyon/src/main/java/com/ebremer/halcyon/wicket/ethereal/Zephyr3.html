@@ -43,8 +43,9 @@
     const fetcher = new $rdf.Fetcher(store);
     const timeout = 5000; // 5 seconds timeout
     const endpoint = 'https://localhost:8888/sparql';
-    const baseURI = 'https://localhost:8888/lws/';
+    const baseURI = 'https://dummy.com/';
     
+    /*
     const turtleData = `
         @prefix zeph: <https://halcyon.is/zephyr/ns/> .
         @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -62,16 +63,21 @@
         <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack0.tif> exif:width 10220; exif:height 8570 .
         <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack1.tif> exif:width 10220; exif:height 8570 .
         <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack2.tif> exif:width 10220; exif:height 8570 .
-        <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack3.tif> exif:width 10220; exif:height 8570 .
+        <Stack3.tif> exif:width 10220; exif:height 8570 .
         <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack4.tif> exif:width 10220; exif:height 8570 .
         <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack5.tif> exif:width 10220; exif:height 8570 .
         <https://localhost:8888/iiif/?iiif=https://localhost:8888/ldp/utah/HnE/Stack2/Stack6.tif> exif:width 10220; exif:height 8570 .
         `;
-                
+           */     
         
         window.onload = function() {
-            ZEPHRDF.ParseTTL(turtleData, store, baseURI);
+            console.log("=========================== THE DATA =============================================");
+            console.log(scenegraph);
+            console.log("=========================== END OF THE DATA =============================================");
+            ZEPHRDF.ParseTTL(scenegraph, store, baseURI);
+            //ZEPHRDF.ParseTTL(scenegraph, store);
             ZEPHRDF.DumpTTL(store, baseURI);
+            //ZEPHRDF.DumpTTL(store);
             var ha = ZEPHRDF.ListElements(store, baseURI);
             ZEPHRDF.ListImages(store, baseURI);
             ha.forEach(e => {               

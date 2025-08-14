@@ -21,19 +21,6 @@ function DumpTTL(store, baseURI) {
     console.log(serializedGraph);
 }
 
-function ListElements2OLD(store, baseURI) {
-    const RDF  = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
-    const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
-    const ZEPH_NS = zeph('').value;
-    const typeQuads = store.match(null, RDF('type'), null);
-    typeQuads.forEach(quad => {
-        const obj = quad.object;
-        if (obj.termType === 'NamedNode' && obj.value.startsWith(ZEPH_NS)) {
-            console.log(`Subject <${quad.subject.value}> has type <${obj.value}>`);
-        }
-    });
-}
-
 function ListElements(store, baseURI) {
   const RDF  = $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
   const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
@@ -44,23 +31,6 @@ function ListElements(store, baseURI) {
       quad.object.termType === 'NamedNode' &&
       quad.object.value.startsWith(ZEPH_NS)
     );
-    //  .map(quad => ({
-//        subject: quad.subject,
-//        type:    quad.object
-//    }));
-}
-
-function ListImages2(store, stack) {
-    const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
-    const stacks = store.match(null, $rdf.sym('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), zeph('Stack'));
-    stacks.forEach(stack => {
-        const layers = store.match(stack.subject, zeph('layers'), null);
-        const layerList = layers[0].object.elements;
-        layerList.forEach(layerName => {
-            const image = store.match(layerName, zeph('src'), null);
-            console.log("Image : "+ image[0].object.value);     
-        });
-    });
 }
 
 function ListImages(store, baseURI) {
@@ -76,29 +46,7 @@ function ListImages(store, baseURI) {
     });
 }
 
-
-/*
-function Add(scene, store, statement) {
-    console.log(statement);
-    const foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
-    const zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
-  
-    switch(statement.object.value) {
-        case zeph('Stack').value:
-            console.log("ADDING A STACK");
-            scene.add(new Stack());
-            break;
-        default:
-            console.log("NOT ADDING UNKNOWN");
-    }
-    //if (statement.object.value === zeph('Stack').value) {
-      //  console.log("ADDING A STACK");
-    //}
-
-}*/
-
 class WE {
-    foaf = $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     zeph = $rdf.Namespace('https://halcyon.is/zephyr/ns/');
     
     constructor(scene, store) {
