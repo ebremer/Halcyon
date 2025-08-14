@@ -1,5 +1,5 @@
 {
-    "@id": "stack/1",
+    "@id": "",
     "@type": "Stack",
     "layers": [
             { "src": "Stack0.tif" },
