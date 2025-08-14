@@ -224,8 +224,9 @@ public class ListImages extends BasePage implements IPanelChangeListener {
                 public void onClick() {
                     Solution s = model.getObject();
                     String g = s.getMap().get("s").getURI();
-                    System.out.println("RAH ---> "+PathFinder.LocalPath2IIIFURL(g));
-                    setResponsePage(new Zephyr2(PathFinder.LocalPath2IIIFURL(g)));
+                    //System.out.println("RAH ---> "+PathFinder.LocalPath2IIIFURL(g));
+                    setResponsePage(new Zephyr2(g));
+                    //setResponsePage(new Zephyr2(PathFinder.LocalPath2IIIFURL(g)));
                 }
             };
             add(zephyr);
