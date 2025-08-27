@@ -7,9 +7,13 @@ import org.locationtech.jts.operation.polygonize.Polygonizer;
 import org.locationtech.jts.simplify.DouglasPeuckerSimplifier;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.imageio.ImageIO;
+import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
 
 public class RasterToPolygon {
@@ -150,19 +154,114 @@ public class RasterToPolygon {
         return writer.write(geom);
     }
     
-    public static void main(String[] args) {
+    public static List<String> toPolygonWKTList(BufferedImage img, int thresh) {
+        List<Polygon> polys = RasterToPolygon.blackRegionsToPolygons(img, thresh);
+        List<String> results = new ArrayList<>();
+        WKTWriter writer = new WKTWriter();
+        for (Polygon p : polys) {
+            Geometry g = p;  // just in case simplification created multi parts earlier
+            switch (g) {
+                case MultiPolygon mp -> {
+                    for (int i = 0; i < mp.getNumGeometries(); i++) {
+                        results.add(writer.write(mp.getGeometryN(i)));
+                    }
+                }
+                case Polygon polygon -> results.add(writer.write(polygon));
+                default -> {
+                }
+            }
+        }
+        return results;
+    }
+    
+    public static void drawPolygonsAndSave(BufferedImage img, List<String> polygons, File outFile) {
+        GeometryFactory gf = new GeometryFactory();
+        WKTReader reader = new WKTReader(gf);
+        Graphics2D g2d = img.createGraphics();
+        g2d.setColor(Color.GREEN);
+        g2d.setStroke(new java.awt.BasicStroke(2.0f));  // thicker outline
+        try {
+            for (String wkt : polygons) {
+                Geometry geom = reader.read(wkt);
+                if (geom instanceof Polygon poly) {
+                    drawPolygon(g2d, poly);
+                } else if (geom instanceof MultiPolygon mp) {
+                    for (int i = 0; i < mp.getNumGeometries(); i++) {
+                        drawPolygon(g2d, (Polygon) mp.getGeometryN(i));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            g2d.dispose();
+        }
+        try {
+            ImageIO.write(img, "png", outFile);
+                System.out.println("Saved image with polygons to " + outFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void drawPolygon(Graphics2D g2d, Polygon poly) {
+        drawLineString(g2d, poly.getExteriorRing());
+        for (int i = 0; i < poly.getNumInteriorRing(); i++) {
+            drawLineString(g2d, poly.getInteriorRingN(i));
+        }
+    }
+
+    private static void drawLineString(Graphics2D g2d, LineString ls) {
+        Coordinate[] coords = ls.getCoordinates();
+        int n = coords.length;
+        int[] xPoints = new int[n];
+        int[] yPoints = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            xPoints[i] = (int) Math.round(coords[i].x);
+            yPoints[i] = (int) Math.round(coords[i].y);
+        }
+
+        g2d.drawPolygon(xPoints, yPoints, n);
+    }
+    
+    public static BufferedImage LoadPNG(File file) {
+        try {
+            BufferedImage image = ImageIO.read(file);
+            if (image == null) {
+                throw new IOException("Failed to load image, file is not a valid PNG.");
+            }
+            System.out.println("Image loaded: " + image.getWidth() + "x" + image.getHeight());
+            return image;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    public static void main2(String[] args) {
         int w = 100, h = 100;
         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
         Graphics2D g = img.createGraphics();
         g.setColor(Color.BLACK);
         g.fillRect(10, 10, 80, 80);
         g.setColor(Color.WHITE);
         g.fillRect(30, 30, 40, 40);
         g.dispose();
-
         String wkt = RasterToPolygon.toWKT(img, 32);
         System.out.println("Resulting WKT:");
         System.out.println(wkt);
     }
+
+    public static void main(String[] args) {
+        File img = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3.png");
+        File file = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3-IHC-mask.png");
+        File out = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3-IHC-mask-out.png");
+        BufferedImage bi = LoadPNG(file);
+        List<String> wkt = RasterToPolygon.toPolygonWKTList(bi, 32);
+        drawPolygonsAndSave(LoadPNG(img), wkt, out);
+        drawPolygonsAndSave(bi, wkt, out);
+        
+    }    
+
 }
