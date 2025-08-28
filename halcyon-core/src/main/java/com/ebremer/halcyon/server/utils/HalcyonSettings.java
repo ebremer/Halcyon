@@ -23,7 +23,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
@@ -64,7 +63,6 @@ public final class HalcyonSettings {
     public static final String DEFAULTHOSTNAME = "http://localhost";
     public static final String DEFAULTHOSTIP = "0.0.0.0";
     public static final String VERSION = "1.1.0";
-    public static Resource HALCYONAGENT = ResourceFactory.createResource(HAL.NS + "VERSION/" + VERSION);
     public static String HALCYONSOFTWARE = "Halcyon Version " + VERSION;
     private String mode;
     private static final Logger logger = LoggerFactory.getLogger(HalcyonSettings.class);

@@ -127,34 +127,33 @@ public class DirectoryProcessor {
                                 Model xxx = fr.getMeta();
                                 m.add(xxx);
                                 if (fr instanceof ImageReader) {
-                                    m.add(r, SchemaDO.fileFormat, FileUtils.getExtension(fr.getFormat()));
+                                    r.addProperty(SchemaDO.fileFormat, FileUtils.getExtension(fr.getFormat()));
                                 }
-                                m.addLiteral(r, HAL.validFile, true);
+                                r.addLiteral(HAL.validFile, true);
                             } catch (Exception ex) {
                                 logger.trace("WHAT?!?! {} {}", fx, ex.getMessage());
-                                m.addLiteral(r, HAL.validFile, false);
-                                m.addLiteral(r, HAL.filemetaversion, m.createTypedLiteral(filemetaversion, XSD.integer.getURI()));
+                                r.addLiteral(HAL.validFile, false);
+                                r.addLiteral(HAL.filemetaversion, m.createTypedLiteral(filemetaversion, XSD.integer.getURI()));
                             }
                             Model pathinfo;
                             ZonedDateTime dateTime = ZonedDateTime.now();
                             dateTime.format(formatter);
                             Literal dateLiteral = m.createTypedLiteral(dateTime.format(formatter), XSDDatatype.XSDdateTime);
-                            m.add(r, DCTerms.dateAccepted, dateLiteral);
-                            m.add(r, DCTerms.modified, dateLiteral);
-                            m.add(r, DCTerms.title, r.getLocalName());
-                            m.addLiteral(r,SchemaDO.contentSize,file.length());
-                            m.add(r,SchemaDO.instrument, HalcyonSettings.HALCYONAGENT);
-                            m.add(r,HAL.halcyonVersion, HalcyonSettings.VERSION);
-                            m.addLiteral(r, HAL.fileLastModified, file.lastModified());
+                            r.addProperty(DCTerms.dateAccepted, dateLiteral);
+                            r.addProperty(DCTerms.modified, dateLiteral);
+                            r.addProperty(DCTerms.title, r.getLocalName());
+                            r.addLiteral(SchemaDO.contentSize, file.length());
+                            r.addProperty(HAL.halcyonVersion, HalcyonSettings.VERSION);
+                            r.addLiteral(HAL.fileLastModified, file.lastModified());
                             long now = System.nanoTime();
                             /*
                             Hashes hashes;                                    
                             try {
                                 hashes = HashTools.calculateHashes(file);
-                                m.add(r,LOC.md5,hashes.MD5());
-                                m.add(r, OWL.sameAs, m.createResource("urn:md5:"+hashes.MD5()));
-                                m.add(r, LOC.sha256, hashes.SHA256());
-                                m.add(r, OWL.sameAs, m.createResource("urn:sha256:"+hashes.SHA256()));
+                                r.addProperty(LOC.md5,hashes.MD5());
+                                r.addProperty(OWL.sameAs, m.createResource("urn:md5:"+hashes.MD5()));
+                                r.addProperty(LOC.sha256, hashes.SHA256());
+                                r.addProperty(OWL.sameAs, m.createResource("urn:sha256:"+hashes.SHA256()));
                             } catch (NoSuchAlgorithmException ex) {
                                 logger.error(ex.toString());
                             } catch (FileNotFoundException ex) {
@@ -164,6 +163,11 @@ public class DirectoryProcessor {
                             }*/
                             System.out.println("Time = "+((System.nanoTime()-now)/1000000000d));
                             pathinfo = PathInfo(httpuri);
+                            System.out.println("============== PATHINFO =====================");
+                            pathinfo.write(System.out, "TTL");
+                            System.out.println("============== DATA =====================");
+                            m.write(System.out, "TTL");
+                            System.out.println("RESOURCE "+r);
                             buffer.begin(ReadWrite.WRITE);
                             buffer.addNamedModel(HAL.CollectionsAndResources, pathinfo);
                             buffer.removeNamedModel(r);
