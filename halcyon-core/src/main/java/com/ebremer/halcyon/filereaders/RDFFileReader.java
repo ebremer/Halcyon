@@ -56,7 +56,8 @@ public class RDFFileReader extends AbstractFileReader {
         m.createResource(baseURI)
                 .addProperty(RDF.type, LDP.RDFSource);
         Lang lang = getLangFromUri(uri);
-        Optional<URI> x = PathMapper.getPathMapper().http2file(uri);
+        File filex = new File("D:\\HalcyonStorage\\utah\\HnE\\Stack2\\stack.jsonld");
+        Optional<URI> x = PathMapper.getPathMapper(filex).http2file(uri);
         if (x.isPresent()) {
             System.out.println(x.get());
         }
