@@ -105,11 +105,6 @@ public final class HalcyonSettings {
             mode = "release"; // Default to release if there's an error
         }         
     }
-    
-    private HalcyonSettings() {
-        File file = new File(MasterSettingsLocation);
-        this(file);
-    }
 
     public String getwebfiles() {
         return webfiles;
@@ -181,8 +176,9 @@ public final class HalcyonSettings {
     }
 
     public static HalcyonSettings getSettings() {
+        File file = new File(MasterSettingsLocation);
         if (settings == null) {
-            settings = new HalcyonSettings();
+            settings = new HalcyonSettings(file);
         }
         return settings;
     }
