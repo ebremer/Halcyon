@@ -83,7 +83,7 @@ public final class HalcyonSession extends WebSession {
             ResteasyClientBuilder builder = (ResteasyClientBuilder) ClientBuilder.newBuilder();
             builder.disableTrustManager();
             ResteasyClient client = builder.build();
-            String cmd = s.getProxyHostName()+"/auth/admin/realms/"+HalcyonSettings.realm+"/users";
+            String cmd = s.getProxyHostName()+"/auth/admin/realms/"+HalcyonSettings.REALM+"/users";
             ResteasyWebTarget target = client.target(cmd);
             System.out.println("SERVER CLIENT ===> "+cmd);
             Invocation.Builder zam = target.request();
@@ -96,7 +96,7 @@ public final class HalcyonSession extends WebSession {
             } else {
                 System.out.println("not able to update/Parse users...");
             }            
-            cmd = s.getAuthServer()+"/auth/admin/realms/"+HalcyonSettings.realm+"/groups";
+            cmd = s.getAuthServer()+"/auth/admin/realms/"+HalcyonSettings.REALM+"/groups";
             target = client.target(cmd);
             System.out.println("SERVER CLIENT ===> "+cmd);
             zam = target.request();
@@ -113,7 +113,7 @@ public final class HalcyonSession extends WebSession {
                     Resource gg = qs.getResource("s");                    
                     System.out.println(gg.getURI());
                     map.forEach((k,v)->{ System.out.println(k+"  "+v);});
-                    String cmdx = s.getAuthServer()+"/auth/admin/realms/"+HalcyonSettings.realm+"/groups/"+map.get(gg.getURI())+"/members";
+                    String cmdx = s.getAuthServer()+"/auth/admin/realms/"+HalcyonSettings.REALM+"/groups/"+map.get(gg.getURI())+"/members";
                     ResteasyWebTarget targetx = client.target(cmdx);
                     System.out.println("SERVER CLIENT ===> "+cmdx);
                     Invocation.Builder zamx = targetx.request();

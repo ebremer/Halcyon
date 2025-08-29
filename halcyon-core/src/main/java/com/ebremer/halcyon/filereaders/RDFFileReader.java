@@ -1,5 +1,6 @@
 package com.ebremer.halcyon.filereaders;
 
+import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.ns.LDP;
 import java.io.File;
@@ -26,6 +27,7 @@ import org.apache.jena.vocabulary.RDF;
 public class RDFFileReader extends AbstractFileReader {
     private Model m;    
     private static final Map<String, Lang> EXT_TO_LANG = new HashMap<>();
+    private Optional<PathMapper> pathMapper;
 
     static {
         EXT_TO_LANG.put("ttl", Lang.TURTLE);
@@ -44,25 +46,36 @@ public class RDFFileReader extends AbstractFileReader {
         String ext = path.substring(dotIndex + 1).toLowerCase();
         return EXT_TO_LANG.get(ext);
     }
-    
-    //public RDFFileReader(URI uri, File file) {
-       
-    //}
 
     public RDFFileReader(URI uri) {
+        this(uri, null);        
+    }
+        
+    public RDFFileReader(URI uri, PathMapper pm) {
         super(uri);
+        if (pm==null) {
+            pathMapper = Optional.empty();
+        } else {
+            this.pathMapper = Optional.of(pm);
+        }
         m = ModelFactory.createDefaultModel();
-        String baseURI = uri.toString();        
+        String baseURI = uri.toString();     
         m.createResource(baseURI)
                 .addProperty(RDF.type, LDP.RDFSource);
         Lang lang = getLangFromUri(uri);
-        File filex = new File("D:\\HalcyonStorage\\utah\\HnE\\Stack2\\stack.jsonld");
-        Optional<URI> x = PathMapper.getPathMapper(filex).http2file(uri);
-        if (x.isPresent()) {
-            System.out.println(x.get());
+        URI src;
+        if (pathMapper.isEmpty()) {
+            src = uri;
+        } else {
+            PathMapper pmx = pathMapper.get();
+            Optional<URI> x = pmx.http2file(uri);
+            if (x.isPresent()) {
+                src = x.get();
+            } else {
+                throw new Error("file does not exist : "+uri);
+            }
         }
-        File file = new File("D:\\HalcyonStorage\\utah\\HnE\\Stack2\\stack.jsonld");
-        try (FileInputStream fis = new FileInputStream(file)) {            
+        try (FileInputStream fis = new FileInputStream(new File(src))) {
             RDFParser.create()
                     .source(fis)
                     .base(baseURI)
@@ -104,11 +117,12 @@ public class RDFFileReader extends AbstractFileReader {
     public void close() {}
     
     public static void main(String[] args) {
-        File file = new File("D:\\HalcyonStorage\\utah\\HnE\\Stack2\\stack.jsonld");
-        URI uri = URI.create("https://localhost:8888/utah/HnE/Stack2/stack.jsonld");
-        //URI uri = file.toURI();
-        RDFFileReader r = new RDFFileReader(uri);
-        RDFDataMgr.write(System.out, r.getMeta(), Lang.TURTLE);
+        URI uri = URI.create("https://localhost:8888/ldp/utah/HnE/Stack2/stack.jsonld");
+        File settingsFile = new File("D:\\projects\\Halcyon\\Halcyon\\settings.ttl");
+        HalcyonSettings settings = HalcyonSettings.getSettings(settingsFile);
+        PathMapper pathMapper = PathMapper.getPathMapper(settings);
+        RDFFileReader r = new RDFFileReader(uri,pathMapper);
+        RDFDataMgr.write(System.out, r.getMeta(), Lang.TURTLE);      
     }
     
 }

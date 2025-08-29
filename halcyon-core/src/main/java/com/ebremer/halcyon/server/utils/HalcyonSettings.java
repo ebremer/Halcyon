@@ -54,7 +54,7 @@ public final class HalcyonSettings {
     private final HashMap<String, String> http2fileMappings;
     private final HashMap<String, String> file2httpMappings;
     private final String Realm = "master";
-    public static final String realm = "Halcyon";
+    public static final String REALM = "Halcyon";
     public static final int DEFAULTHTTPPORT = 8888;
     public static final int DEFAULTHTTPSPORT = 9999;
     public static final int DEFAULTSPARQLPORT = 8887;
@@ -74,9 +74,8 @@ public final class HalcyonSettings {
             System.out.println("no config file found!");
             GenerateDefaultSettings();
         } else {
-            System.out.println("loading configuration file : " + MasterSettingsLocation);
-            // Load the RDF model from the settings.ttl file
-            m = RDFDataMgr.loadModel(MasterSettingsLocation, Lang.TTL);
+            System.out.println("loading configuration file : " + f);
+            m = RDFDataMgr.loadModel(f.toString(), Lang.TTL);
             System.out.println("# of triples " + m.size());
             GetMasterID();
         }
@@ -103,7 +102,8 @@ public final class HalcyonSettings {
         } catch (Exception e) {
             logger.error("Error loading settings", e);
             mode = "release"; // Default to release if there's an error
-        }         
+        }
+        GetResourceHandlers();
     }
 
     public String getwebfiles() {

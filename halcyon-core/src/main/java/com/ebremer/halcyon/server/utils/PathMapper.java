@@ -98,7 +98,7 @@ public class PathMapper {
         }
         return Optional.empty();
     }
-    
+        
     public Optional<URI> file2http(URI furi) {
         if (OperatingSystemInfo.ifWindows()) {
             return file2http(furi.getPath().substring(1));
@@ -114,11 +114,14 @@ public class PathMapper {
         return pathmapper;
     }
     
-    public static PathMapper getPathMapper(File file) {
-        HalcyonSettings settings = HalcyonSettings.getSettings(file);
+    public static PathMapper getPathMapper(HalcyonSettings settings) {        
         if (pathmapper == null) {
             pathmapper = new PathMapper(settings);            
         }
+        
+        pathmapper.sortByFile.forEach(p->System.out.println("by file ---> "+p));
+        pathmapper.sortByHttp.forEach(p->System.out.println("by http ---> "+p));
+        
         return pathmapper;
     }    
 }
