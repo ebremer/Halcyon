@@ -12,8 +12,8 @@
 
     <properties>
         <exec.mainClass>com.ebremer.halcyon.core.HalcyonCore</exec.mainClass>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <!--<maven.compiler.source>25</maven.compiler.source>-->
+        <!--<maven.compiler.target>25</maven.compiler.target>-->
     </properties>
     <dependencies>
         <dependency>
@@ -87,6 +87,17 @@
     <build>
         <!--<finalName>library-${project.version}</finalName>-->
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version> <!-- use latest -->
+                <configuration>
+                    <!--<release>25</release>-->
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

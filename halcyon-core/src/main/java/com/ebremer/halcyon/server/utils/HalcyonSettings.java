@@ -66,9 +66,8 @@ public final class HalcyonSettings {
     public static String HALCYONSOFTWARE = "Halcyon Version " + VERSION;
     private String mode;
     private static final Logger logger = LoggerFactory.getLogger(HalcyonSettings.class);
-
-    private HalcyonSettings() {
-        File f = new File(MasterSettingsLocation);
+    
+    private HalcyonSettings(File f) {
         http2fileMappings = new HashMap<>();
         file2httpMappings = new HashMap<>();
         if (!f.exists()) {
@@ -104,7 +103,12 @@ public final class HalcyonSettings {
         } catch (Exception e) {
             logger.error("Error loading settings", e);
             mode = "release"; // Default to release if there's an error
-        }
+        }         
+    }
+    
+    private HalcyonSettings() {
+        File file = new File(MasterSettingsLocation);
+        this(file);
     }
 
     public String getwebfiles() {
@@ -183,6 +187,13 @@ public final class HalcyonSettings {
         return settings;
     }
 
+    public static HalcyonSettings getSettings(File file) {
+        if (settings == null) {
+            settings = new HalcyonSettings(file);
+        }
+        return settings;
+    }    
+    
     public void GenerateDefaultSettings() {
         m = ModelFactory.createDefaultModel();
         Master = m.createResource(DEFAULTHOSTNAME);

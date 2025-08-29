@@ -106,7 +106,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <compilerArgs>                        
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
                     </compilerArgs>
                 </configuration>
             </plugin>
@@ -127,7 +128,7 @@
                 </excludes>
             </resource>
         </resources>
-    </build>
+    </build>  
     <profiles>
         <profile>
             <id>jar</id>
@@ -244,7 +245,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.5.2</version>
+                        <version>3.5.3</version>
                     </plugin>
                 </plugins>
             </build>
@@ -290,7 +291,7 @@
             <groupId>org.graalvm.nativeimage</groupId>
             <artifactId>svm</artifactId>
             <scope>provided</scope>
-            <version>24.1.2</version>
+            <version>24.2.2</version>
         </dependency>        
         <dependency>
             <groupId>com.h2database</groupId>

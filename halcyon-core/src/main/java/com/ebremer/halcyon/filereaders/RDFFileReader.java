@@ -1,5 +1,6 @@
 package com.ebremer.halcyon.filereaders;
 
+import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.ns.LDP;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
@@ -35,24 +37,30 @@ public class RDFFileReader extends AbstractFileReader {
     private static Lang getLangFromUri(URI uri) {
         String path = uri.getPath();
         if (path == null) return null;
-
         int dotIndex = path.lastIndexOf('.');
         if (dotIndex == -1 || dotIndex == path.length() - 1) {
             return null;
         }
-
         String ext = path.substring(dotIndex + 1).toLowerCase();
         return EXT_TO_LANG.get(ext);
     }
+    
+    //public RDFFileReader(URI uri, File file) {
+       
+    //}
 
     public RDFFileReader(URI uri) {
         super(uri);
         m = ModelFactory.createDefaultModel();
-        File file = new File(uri);
         String baseURI = uri.toString();        
         m.createResource(baseURI)
                 .addProperty(RDF.type, LDP.RDFSource);
         Lang lang = getLangFromUri(uri);
+        Optional<URI> x = PathMapper.getPathMapper().http2file(uri);
+        if (x.isPresent()) {
+            System.out.println(x.get());
+        }
+        File file = new File("D:\\HalcyonStorage\\utah\\HnE\\Stack2\\stack.jsonld");
         try (FileInputStream fis = new FileInputStream(file)) {            
             RDFParser.create()
                     .source(fis)
@@ -96,7 +104,8 @@ public class RDFFileReader extends AbstractFileReader {
     
     public static void main(String[] args) {
         File file = new File("D:\\HalcyonStorage\\utah\\HnE\\Stack2\\stack.jsonld");
-        URI uri = file.toURI();
+        URI uri = URI.create("https://localhost:8888/utah/HnE/Stack2/stack.jsonld");
+        //URI uri = file.toURI();
         RDFFileReader r = new RDFFileReader(uri);
         RDFDataMgr.write(System.out, r.getMeta(), Lang.TURTLE);
     }
