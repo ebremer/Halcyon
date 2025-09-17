@@ -106,6 +106,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
+                    <release>25</release>
                     <compilerArgs>
                         <arg>--enable-preview</arg>
                     </compilerArgs>
