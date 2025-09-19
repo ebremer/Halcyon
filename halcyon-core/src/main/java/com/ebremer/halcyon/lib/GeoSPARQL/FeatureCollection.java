@@ -101,6 +101,7 @@ public class FeatureCollection {
 
         public Builder setRoot(String root) {
             this.root = root;
+            this.root = "";
             return this;
         }        
         
@@ -117,7 +118,7 @@ public class FeatureCollection {
         }
 
         public Builder sourceImage(String uri, int width, int height) {
-            this.sourceImageURI = uri;
+            this.sourceImageURI = uri.trim();
             this.imageWidth = width;
             this.imageHeight = height;
             return this;
