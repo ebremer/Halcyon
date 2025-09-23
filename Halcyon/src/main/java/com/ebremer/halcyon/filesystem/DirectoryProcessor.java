@@ -161,13 +161,13 @@ public class DirectoryProcessor {
                             } catch (IOException ex) {
                                 logger.error(ex.toString());
                             }*/
-                            System.out.println("Time = "+((System.nanoTime()-now)/1000000000d));
+                            //System.out.println("Time = "+((System.nanoTime()-now)/1000000000d));
                             pathinfo = PathInfo(httpuri);
-                            System.out.println("============== PATHINFO =====================");
-                            pathinfo.write(System.out, "TTL");
-                            System.out.println("============== DATA =====================");
-                            m.write(System.out, "TTL");
-                            System.out.println("RESOURCE "+r);
+                            //System.out.println("============== PATHINFO =====================");
+                            //pathinfo.write(System.out, "TTL");
+                            //System.out.println("============== DATA =====================");
+                            //m.write(System.out, "TTL");
+                            //System.out.println("RESOURCE "+r);
                             buffer.begin(ReadWrite.WRITE);
                             buffer.addNamedModel(HAL.CollectionsAndResources, pathinfo);
                             buffer.removeNamedModel(r);

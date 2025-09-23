@@ -1,6 +1,9 @@
 package com.ebremer.vandegraph.dev;
 
+import com.ebremer.halcyon.data.DataCore;
 import java.io.IOException;
+import org.apache.jena.query.Dataset;
+import org.apache.jena.query.ReadWrite;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
@@ -36,6 +39,13 @@ public class Stack {
     }
     
     public Model getModel() {
+        return stack;
+    }
+    
+    public Model getModel2() {
+        Dataset ds = DataCore.getInstance().getDataset();
+        ds.begin(ReadWrite.READ);
+        
         return stack;
     }
 }
