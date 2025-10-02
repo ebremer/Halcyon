@@ -27,13 +27,14 @@ public class HalcyonPrincipal implements Principal, Serializable {
     private String lastname;
     private String firstname;
     private String preferred_username;
-    private ArrayList<String> groups;
+    private final ArrayList<String> groups;
 
     public HalcyonPrincipal(KeycloakOidcProfile profile) {
         this(profile.getIdTokenString(),false);
     }
     
     public HalcyonPrincipal(String webid) {
+        groups = new ArrayList<>();
         useruri = webid;
         URNuuid = "ajjaja";
         uuid = "ddsds";
@@ -50,6 +51,7 @@ public class HalcyonPrincipal implements Principal, Serializable {
     }
     
     public HalcyonPrincipal(JwtToken jwttoken, boolean anonymous) {
+        groups = new ArrayList<>();
         this.token = (String) jwttoken.getCredentials();
         Claims claims = getClaims(token);
         URNuuid = "urn:uuid:"+claims.get("sub");
@@ -76,7 +78,8 @@ public class HalcyonPrincipal implements Principal, Serializable {
         }
         this.useruri = HalcyonSettings.getSettings().getHostName()+"/user/"+preferred_username;
         if (claims.keySet().contains("HalcyonGroups")) {
-            groups = (ArrayList) claims.get("HalcyonGroups");
+            ArrayList<String> ha = (ArrayList) claims.get("HalcyonGroups");
+            groups.addAll(ha);
         } else {
             firstname = "";
         }
@@ -116,7 +119,7 @@ public class HalcyonPrincipal implements Principal, Serializable {
         return preferred_username;
     }
     
-    public ArrayList getGroups() {
+    public ArrayList<String> getGroups() {
         return groups;
     }
 

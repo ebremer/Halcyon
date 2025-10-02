@@ -5,7 +5,6 @@ import com.ebremer.halcyon.datum.HalcyonPrincipal;
 import com.ebremer.halcyon.gui.Blank;
 import com.ebremer.halcyon.gui.HalcyonSession;
 import com.ebremer.halcyon.gui.LogoutLink;
-import com.ebremer.halcyon.sparql.Sparql;
 import org.apache.wicket.markup.head.CssReferenceHeaderItem;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.link.ExternalLink;
