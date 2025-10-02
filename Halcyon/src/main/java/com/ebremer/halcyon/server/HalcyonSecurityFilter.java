@@ -13,6 +13,7 @@ import org.pac4j.core.util.security.SecurityEndpointBuilder;
 import org.pac4j.jee.config.AbstractConfigFilter;
 import org.pac4j.jee.context.JEEFrameworkParameters;
 import java.io.IOException;
+import org.pac4j.oidc.config.OidcConfiguration;
 
 /**
  * <p>This filter protects an URL.</p>
@@ -61,13 +62,20 @@ public class HalcyonSecurityFilter extends AbstractConfigFilter implements Secur
 
     @Override
     protected final void internalFilter( final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain ) throws IOException, ServletException {
+        System.out.println("internalFilter - A");
         var config = getSharedConfig();
+        OidcConfiguration ha;
+        System.out.println("internalFilter - B");
         FrameworkAdapter.INSTANCE.applyDefaultSettingsIfUndefined(config);
+        System.out.println("internalFilter - C");
         config.getSecurityLogic().perform(config, (ctx, session, profiles) -> {
+            System.out.println("internalFilter - D");
             // if no profiles are loaded, pac4j is not concerned with this request
             filterChain.doFilter(profiles.isEmpty() ? request : new HalcyonPac4JHttpServletRequestWrapper(request, profiles), response);
+            System.out.println("internalFilter - E");
             return null;
         }, clients, authorizers, matchers, new JEEFrameworkParameters(request, response));
+        System.out.println("internalFilter - F");
     }
 
     @Override

@@ -96,22 +96,20 @@ public class SslConfig {
     }
     
     class SslWebServerFactoryCustomizer implements WebServerFactoryCustomizer<JettyServletWebServerFactory> {
-    @Override
-    public void customize(JettyServletWebServerFactory factory) {
-        if (HalcyonSettings.getSettings().isHTTPS2enabled()) {
-            Ssl ssl = new Ssl();
-            ssl.setKeyStore("halcyonkeystore.jks");
-            ssl.setKeyStorePassword("password");
-            ssl.setKeyStoreType("JKS");
-            ssl.setKeyAlias("halcyon");
-            ssl.setTrustStore("halcyontruststore.jks");
-            ssl.setTrustStorePassword("password");
-            ssl.setTrustStoreType("JKS");
-            ssl.setEnabledProtocols(new String[]{"TLSv1.3"});
-            factory.setSsl(ssl);
+        @Override
+        public void customize(JettyServletWebServerFactory factory) {
+            if (HalcyonSettings.getSettings().isHTTPS2enabled()) {
+                Ssl ssl = new Ssl();
+                ssl.setKeyStore("halcyonkeystore.jks");
+                ssl.setKeyStorePassword("password");
+                ssl.setKeyStoreType("JKS");
+                ssl.setKeyAlias("halcyon");
+                ssl.setTrustStore("halcyontruststore.jks");
+                ssl.setTrustStorePassword("password");
+                ssl.setTrustStoreType("JKS");
+                ssl.setEnabledProtocols(new String[]{"TLSv1.3"});
+                factory.setSsl(ssl);
+            }
         }
-    }
-}
-    
-    
+    }  
 }

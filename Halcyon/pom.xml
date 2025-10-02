@@ -281,7 +281,7 @@
             <groupId>org.graalvm.nativeimage</groupId>
             <artifactId>svm</artifactId>
             <scope>provided</scope>
-            <version>24.2.2</version>
+            <version>25.0.0</version>
         </dependency>        
         <dependency>
             <groupId>com.h2database</groupId>
@@ -436,18 +436,18 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
-            <version>0.12.6</version>
+            <version>0.13.0</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
-            <version>0.12.6</version>
+            <version>0.13.0</version>
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
-            <version>0.12.6</version>
+            <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -493,7 +493,7 @@
         <dependency>
             <groupId>org.pac4j</groupId>
             <artifactId>pac4j-oidc</artifactId>
-            <version>6.0.3</version>
+            <version>6.2.2</version>
         </dependency>
         <dependency>
             <groupId>jakarta.inject</groupId>
@@ -518,7 +518,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-fileupload2-core</artifactId>
-            <version>2.0.0-M2</version>
+            <version>2.0.0-M4</version>
         </dependency>
     </dependencies>
 </project>

@@ -28,7 +28,7 @@ import org.springframework.core.Ordered;
                 if (OperatingSystemInfo.ifWindows()) {
                     srb.addInitParameter("resourceBase", rh.resourceBase().getPath().substring(1));
                     System.out.println("Add Path --> " + rh.urlPath() + "  " + rh.resourceBase().getPath().substring(1));
-                } else {
+                } else {                
                     srb.addInitParameter("resourceBase", rh.resourceBase().getPath());
                     System.out.println("Add Path --> " + rh.urlPath() + "  " + rh.resourceBase().getPath());
                 }

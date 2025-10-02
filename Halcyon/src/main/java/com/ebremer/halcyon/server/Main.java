@@ -19,10 +19,7 @@ import com.ebremer.halcyon.fuseki.HalcyonProxyServlet;
 import com.ebremer.halcyon.fuseki.SPARQLEndPoint;
 import com.ebremer.halcyon.lib.spatial.Spatial;
 import com.ebremer.halcyon.sparql.InvalidateSessionServlet;
-import com.ebremer.vandegraph.dev.Stack;
-import com.ebremer.vandegraph.dev.efUtils;
 import jakarta.annotation.PostConstruct;
-import java.io.IOException;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ReadWrite;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
@@ -57,7 +54,7 @@ public class Main {
         KeycloakOidcConfiguration config = new KeycloakOidcConfiguration();
         config.setClientId("account");
         config.setRealm("Halcyon");
-        config.setBaseUri(HalcyonSettings.getSettings().getProxyHostName() + "/auth");
+        config.setBaseUri(HalcyonSettings.getSettings().getProxyHostName());
         //config.setBaseUri(HalcyonSettings.getSettings().getProxyHostName());
         if (HalcyonSettings.getSettings().isHTTPS2enabled()) {
             config.setSslSocketFactory(defaultSslBundleRegistry.getBundle("server").createSslContext().getSocketFactory());

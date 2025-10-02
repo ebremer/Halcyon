@@ -70,6 +70,8 @@ public class LDPServer extends DefaultServlet {
        or responding with a default HTML page if the content type is unsupported.
      * @param request
      * @param response
+     * @throws jakarta.servlet.ServletException
+     * @throws java.io.IOException
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
