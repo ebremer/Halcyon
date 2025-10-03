@@ -70,7 +70,7 @@ public class MenuPanel extends Panel {
             hp.getGroups().forEach(k->{
                 System.out.println("GROUP : "+k);
             });
-            if (hp.getGroups().contains("/admin")) {
+            if (hp.getGroups().contains("admin")) {
                 security.setVisible(true);
                 //threed.setVisible(true);
                 account.setVisible(true);

@@ -67,6 +67,7 @@ public final class HalcyonSession extends WebSession {
         if (profile.isPresent()) {
             OidcProfile oidcProfile = (OidcProfile) profile.get();
             String jwt = oidcProfile.getAccessToken().getValue();
+            System.out.println("JWT : "+jwt);
             JwtToken haha = new JwtToken(jwt);
             user = haha.getPrincipal().getPreferredUserName();
             userURI = haha.getPrincipal().getUserURI();

@@ -77,11 +77,14 @@ public class HalcyonPrincipal implements Principal, Serializable {
             preferred_username = "";
         }
         this.useruri = HalcyonSettings.getSettings().getHostName()+"/user/"+preferred_username;
-        if (claims.keySet().contains("HalcyonGroups")) {
-            ArrayList<String> ha = (ArrayList) claims.get("HalcyonGroups");
+        if (claims.keySet().contains("groups")) {
+            System.out.println("GROUPS DETECTED!!!");
+            ArrayList<String> ha = (ArrayList) claims.get("groups");
+            ha.forEach(g->System.out.println(g));
             groups.addAll(ha);
         } else {
             firstname = "";
+            System.out.println("NNOOOOOOOOOOOOOOOOOOOOOOOO GROUPS DETECTED!!!");
         }
         if (!anonymous) {
             name = firstname+" "+lastname;
