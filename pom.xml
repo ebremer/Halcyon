@@ -79,7 +79,7 @@
         <maven.compiler.release>25</maven.compiler.release>
         <exec.longClasspath>true</exec.longClasspath>
         <springboot.version>3.5.5</springboot.version>
-	<resteasy.version>6.2.11.Final</resteasy.version>
+	<resteasy.version>6.2.12.Final</resteasy.version>
         <jetty.version>12.0.25</jetty.version>
         <jena.version>5.5.0</jena.version>
         <wicket.ver>10.6.0</wicket.ver>

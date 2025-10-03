@@ -13,8 +13,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -114,7 +116,10 @@ public class INIT {
     
     public void init() {
         JenaSystem.init();
-        
+        Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
+        readers.forEachRemaining(ir->{
+            System.out.println("TIF READER LOADED : "+ir.getClass().toGenericString());
+        });
         dump("defaultapplication.yml","application.yml");
         
         // Setup Keycloak initialization files        

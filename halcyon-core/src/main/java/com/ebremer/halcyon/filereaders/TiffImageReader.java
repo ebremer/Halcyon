@@ -8,7 +8,6 @@ import com.ebremer.halcyon.utils.ImageTools;
 import com.ebremer.ns.EXIF;
 import com.ebremer.ns.HAL;
 import com.ebremer.ns.LDP;
-import com.twelvemonkeys.imageio.metadata.Entry;
 import com.twelvemonkeys.imageio.metadata.tiff.Rational;
 import com.twelvemonkeys.imageio.metadata.tiff.TIFF;
 import com.twelvemonkeys.imageio.plugins.tiff.TIFFImageMetadata;
@@ -29,36 +28,47 @@ import javax.imageio.stream.ImageInputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.ResourceFactory;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.SchemaDO;
 import org.apache.jena.vocabulary.XSD;
+import org.slf4j.LoggerFactory;
 
 public class TiffImageReader extends AbstractImageReader {
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TiffImageReader.class);
     private javax.imageio.ImageReader reader;
     private final ImageMeta meta;
     private final URI uri;
     private static final int METAVERSION = 0;
 
     public TiffImageReader(URI uri, URI base) throws IOException {
+        logger.info("TiffImageReader(URI uri, URI base) {} {}", uri, base);
         this.uri = uri;
         File file = new File(uri);
+        logger.info("2");
         ImageInputStream input = ImageIO.createImageInputStream(file);
+        logger.info("3 - {}",input);
         Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
+        logger.info("4");
         readers = ImageIO.getImageReadersByFormatName("tif");
+        logger.info("5");
         javax.imageio.ImageReader ir = null;
-        while (readers.hasNext()) {
+        logger.info("5b");
+        while (readers.hasNext()) {            
             ir = readers.next();
+            logger.info("Reader --> {}",ir, ir.getClass().toGenericString());
             if ("com.twelvemonkeys.imageio.plugins.tiff.TIFFImageReader".equals(ir.getClass().getCanonicalName())) {
                 reader = ir;
             }
         }
+        logger.info("6 - {}",reader);
         if (ir==null) {
+            logger.error("No reader for: {}", file);
             throw new IllegalArgumentException("No reader for: " + file);
         }
         reader.setInput(input);            
+        logger.info("7");
         ImageMeta.Builder builder = ImageMeta.Builder.getBuilder(0, reader.getWidth(0), reader.getHeight(0))
             .setTileSizeX(reader.getTileWidth(0))
             .setTileSizeY(reader.getTileHeight(0));

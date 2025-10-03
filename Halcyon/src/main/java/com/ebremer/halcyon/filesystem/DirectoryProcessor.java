@@ -9,18 +9,13 @@ import com.ebremer.halcyon.lib.FileUtils;
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.halcyon.utils.HURI;
-import com.ebremer.halcyon.utils.HashTools;
-import com.ebremer.halcyon.utils.HashTools.Hashes;
 import com.ebremer.ns.HAL;
 import com.ebremer.ns.LDP;
-import com.ebremer.ns.LOC;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -121,17 +116,24 @@ public class DirectoryProcessor {
                             r.addProperty(OWL.sameAs, m.createResource(HURI.of(fx).toString()));
                             File file = fx.toFile();
                             FileReaderFactory frf = FileReaderFactoryProvider.getReaderForFormat(r);
-                            logger.trace("Reader {}", frf);
+                            logger.info("Reader {}", frf);
                             try (FileReader fr = frf.create(fx.toUri(), httpuri)){
+                                logger.info("A");
                                 //Model xxx = fr.getMeta(httpuri);
                                 Model xxx = fr.getMeta();
+                                logger.info("B");
                                 m.add(xxx);
+                                logger.info("C");
                                 if (fr instanceof ImageReader) {
+                                    logger.info("D");
                                     r.addProperty(SchemaDO.fileFormat, FileUtils.getExtension(fr.getFormat()));
+                                    logger.info("E");
                                 }
+                                logger.info("F");
                                 r.addLiteral(HAL.validFile, true);
+                                logger.info("G");
                             } catch (Exception ex) {
-                                logger.trace("WHAT?!?! {} {}", fx, ex.getMessage());
+                                logger.info("WHAT?!?! {} {}", fx, ex.getMessage());
                                 r.addLiteral(HAL.validFile, false);
                                 r.addLiteral(HAL.filemetaversion, m.createTypedLiteral(filemetaversion, XSD.integer.getURI()));
                             }
@@ -145,7 +147,7 @@ public class DirectoryProcessor {
                             r.addLiteral(SchemaDO.contentSize, file.length());
                             r.addProperty(HAL.halcyonVersion, HalcyonSettings.VERSION);
                             r.addLiteral(HAL.fileLastModified, file.lastModified());
-                            long now = System.nanoTime();
+                            //long now = System.nanoTime();
                             /*
                             Hashes hashes;                                    
                             try {
@@ -174,7 +176,7 @@ public class DirectoryProcessor {
                             buffer.addNamedModel(r, m);
                             buffer.commit();
                             buffer.end();
-                            System.out.println("Processed : "+r);
+                            logger.info("Processed : {} {}", r, m.size());
                         });
                 } catch (IOException ex) {
                     Logger.getLogger(DirectoryProcessor.class.getName()).log(Level.SEVERE, null, ex);

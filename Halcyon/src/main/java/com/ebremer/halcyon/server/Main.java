@@ -20,6 +20,8 @@ import com.ebremer.halcyon.fuseki.SPARQLEndPoint;
 import com.ebremer.halcyon.lib.spatial.Spatial;
 import com.ebremer.halcyon.sparql.InvalidateSessionServlet;
 import jakarta.annotation.PostConstruct;
+import java.util.Iterator;
+import javax.imageio.ImageIO;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.ReadWrite;
 import org.mitre.dsmiley.httpproxy.ProxyServlet;
@@ -131,6 +133,10 @@ public class Main {
 
     public static void main(String[] args) {
         logger.info("Starting Halcyon...");
+        Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
+        readers.forEachRemaining(ir->{
+            System.out.println("TIF READER LOADED : "+ir.getClass().toGenericString());
+        });
         INIT i = new INIT();
         i.init();
         DataCore dc = DataCore.getInstance();
