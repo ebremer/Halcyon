@@ -121,10 +121,14 @@ public class DirectoryProcessor {
                             logger.info("Reader {}", frf);
                             try (FileReader fr = frf.create(fx.toUri(), httpuri)){
                                 logger.info("A");
-                                Model xxx;
-                                xxx = fr.getMeta();
-                                /*
+                                Model xxx;                                
+                                
                                 if (fr instanceof RDFFileReader rdf) {
+                                    xxx = fr.getMeta();
+                                } else {
+                                    xxx = fr.getMeta();
+                                }
+                                /*
                                     RDFFileReaderFactory rdff = (RDFFileReaderFactory) FileReaderFactoryProvider.getReaderForFormat(r);
                                     RDFFileReader za = (RDFFileReader) rdff.create(httpuri, PathMapper.getPathMapper());
                                     xxx = za.getMeta();

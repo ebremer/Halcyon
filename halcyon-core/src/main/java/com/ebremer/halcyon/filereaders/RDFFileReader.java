@@ -51,7 +51,7 @@ public class RDFFileReader extends AbstractFileReader {
       //  this(uri, null);        
     //}
     
-    public RDFFileReader(URI uri, URI local) {
+    public RDFFileReader(URI local, URI uri) {
         super(uri);
         m = ModelFactory.createDefaultModel();
         String baseURI = uri.toString();     
@@ -71,7 +71,7 @@ public class RDFFileReader extends AbstractFileReader {
             System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
     }
-        /*
+        
     public RDFFileReader(URI uri, PathMapper pm) {
         super(uri);
         if (pm==null) {
@@ -108,7 +108,7 @@ public class RDFFileReader extends AbstractFileReader {
         } catch (IOException ex) {
             System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-    }*/
+    }
 
     @Override
     public Model getMeta() {
