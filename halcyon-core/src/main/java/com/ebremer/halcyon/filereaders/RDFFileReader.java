@@ -47,10 +47,31 @@ public class RDFFileReader extends AbstractFileReader {
         return EXT_TO_LANG.get(ext);
     }
 
-    public RDFFileReader(URI uri) {
-        this(uri, null);        
+    //public RDFFileReader(URI uri) {
+      //  this(uri, null);        
+    //}
+    
+    public RDFFileReader(URI uri, URI local) {
+        super(uri);
+        m = ModelFactory.createDefaultModel();
+        String baseURI = uri.toString();     
+        m.createResource(baseURI)
+                .addProperty(RDF.type, LDP.RDFSource);
+        Lang lang = getLangFromUri(uri);
+        try (FileInputStream fis = new FileInputStream(new File(local))) {
+            RDFParser.create()
+                    .source(fis)
+                    .base(uri.toString())
+                    .lang(lang)
+                    //errorHandler(ErrorHandlerFactory.errorHandlerStrict()) // Strict parsing
+                    .parse(m);
+        } catch (FileNotFoundException ex) {
+            System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        } catch (IOException ex) {
+            System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
     }
-        
+        /*
     public RDFFileReader(URI uri, PathMapper pm) {
         super(uri);
         if (pm==null) {
@@ -87,7 +108,7 @@ public class RDFFileReader extends AbstractFileReader {
         } catch (IOException ex) {
             System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-    }
+    }*/
 
     @Override
     public Model getMeta() {
@@ -117,12 +138,20 @@ public class RDFFileReader extends AbstractFileReader {
     public void close() {}
     
     public static void main(String[] args) {
+        
         URI uri = URI.create("https://localhost:8888/ldp/utah/HnE/Stack2/stack.jsonld");
+        
+        /*
         File settingsFile = new File("D:\\projects\\Halcyon\\Halcyon\\settings.ttl");
         HalcyonSettings settings = HalcyonSettings.getSettings(settingsFile);
         PathMapper pathMapper = PathMapper.getPathMapper(settings);
         RDFFileReader r = new RDFFileReader(uri,pathMapper);
-        RDFDataMgr.write(System.out, r.getMeta(), Lang.TURTLE);      
+        RDFDataMgr.write(System.out, r.getMeta(), Lang.TURTLE);  
+        */
+        
+        URI local = URI.create("file:///D:/HalcyonStorage/utah/HnE/Stack2/stack.jsonld");
+        RDFFileReader r2 = new RDFFileReader(uri,local);
+        RDFDataMgr.write(System.out, r2.getMeta(), Lang.TURTLE); 
     }
     
 }

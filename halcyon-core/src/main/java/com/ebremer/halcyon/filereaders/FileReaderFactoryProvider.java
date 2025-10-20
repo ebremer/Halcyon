@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.jena.rdf.model.Resource;
 import com.ebremer.halcyon.lib.FileUtils;
+import com.ebremer.halcyon.server.utils.PathMapper;
 import java.io.File;
 import java.util.ArrayList;
 import org.slf4j.LoggerFactory;

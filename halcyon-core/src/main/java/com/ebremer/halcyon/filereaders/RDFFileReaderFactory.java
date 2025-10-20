@@ -11,9 +11,13 @@ import java.util.Set;
  */
 public class RDFFileReaderFactory implements FileReaderFactory {
 
+    //public FileReader create(URI uri, PathMapper pathMapper) {
+      //  return new RDFFileReader(uri, pathMapper);    
+    //}
+
     @Override
     public FileReader create(URI uri, URI base) {
-        return new RDFFileReader(uri);    
+        return new RDFFileReader(uri, base);    
     }
     
     @Override
@@ -29,5 +33,4 @@ public class RDFFileReaderFactory implements FileReaderFactory {
         set.add("ttl");
         return set;
     }
-    
 }

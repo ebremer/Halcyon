@@ -105,7 +105,6 @@ public class LWSServer extends DefaultServlet {
 
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         logger.info("PATCH request for URI: {} with Content-Type: {}", request.getRequestURI(), request.getContentType());
-        jakarta.servlet.http.HttpServlet ha;
         handleRequestWithContentType(request, response, request.getContentType(), "PUT");
     }        
     

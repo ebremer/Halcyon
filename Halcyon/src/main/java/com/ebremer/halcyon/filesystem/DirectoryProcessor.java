@@ -5,6 +5,8 @@ import com.ebremer.halcyon.filereaders.FileReader;
 import com.ebremer.halcyon.filereaders.FileReaderFactory;
 import com.ebremer.halcyon.filereaders.FileReaderFactoryProvider;
 import com.ebremer.halcyon.filereaders.ImageReader;
+import com.ebremer.halcyon.filereaders.RDFFileReader;
+import com.ebremer.halcyon.filereaders.RDFFileReaderFactory;
 import com.ebremer.halcyon.lib.FileUtils;
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.server.utils.PathMapper;
@@ -119,8 +121,17 @@ public class DirectoryProcessor {
                             logger.info("Reader {}", frf);
                             try (FileReader fr = frf.create(fx.toUri(), httpuri)){
                                 logger.info("A");
-                                //Model xxx = fr.getMeta(httpuri);
-                                Model xxx = fr.getMeta();
+                                Model xxx;
+                                xxx = fr.getMeta();
+                                /*
+                                if (fr instanceof RDFFileReader rdf) {
+                                    RDFFileReaderFactory rdff = (RDFFileReaderFactory) FileReaderFactoryProvider.getReaderForFormat(r);
+                                    RDFFileReader za = (RDFFileReader) rdff.create(httpuri, PathMapper.getPathMapper());
+                                    xxx = za.getMeta();
+                                } else {
+                                    xxx = fr.getMeta();
+                                }*/
+                                //Model xxx = fr.getMeta();
                                 logger.info("B");
                                 m.add(xxx);
                                 logger.info("C");
