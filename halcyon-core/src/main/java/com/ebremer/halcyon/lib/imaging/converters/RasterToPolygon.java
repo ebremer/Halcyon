@@ -16,15 +16,12 @@ import javax.imageio.ImageIO;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
 import com.ebremer.halcyon.lib.GeoSPARQL.FeatureCollection;
-import com.ebremer.halcyon.utils.HashTools;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.riot.RIOT;
-import org.apache.jena.riot.system.RiotLib;
-import org.apache.jena.sparql.util.Context;
 
 public class RasterToPolygon {
 
@@ -181,6 +178,7 @@ public class RasterToPolygon {
                 }
             }
         }
+        IO.println("# of polygons : "+polys.size());
         return results;
     }
     
