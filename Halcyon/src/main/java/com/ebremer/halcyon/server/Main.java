@@ -139,16 +139,16 @@ public class Main {
         });
         INIT i = new INIT();
         i.init();
-        DataCore dc = DataCore.getInstance();
-        Dataset ds = dc.getDataset();        
-        ds.begin(ReadWrite.WRITE);
-        ds.removeNamedModel("https://localhost:8888/ldp/utah/HnE/Stack2/stack.jsonld");
+   //     DataCore dc = DataCore.getInstance();
+        //Dataset ds = dc.getDataset();        
+        //ds.begin(ReadWrite.WRITE);
+        //ds.removeNamedModel("https://localhost:8888/ldp/utah/HnE/Stack2/stack.jsonld");
         //Stack stack = new Stack();
-        ds.removeNamedModel("https://localhost:8888/utah/HnE/Stack2/stack.jsonld");
-        ds.removeNamedModel("file:///D:/HalcyonStorage/utah/HnE/Stack2/stack.jsonld");
+//        ds.removeNamedModel("https://localhost:8888/utah/HnE/Stack2/stack.jsonld");
+//        ds.removeNamedModel("file:///D:/HalcyonStorage/utah/HnE/Stack2/stack.jsonld");
         //ds.addNamedModel("https://localhost:8888/stack", stack.getModel());
-        ds.commit();
-        ds.end();
+//        ds.commit();
+//        ds.end();
         if (!(System.getProperty("spring.aot.processing") != null)) {
             SPARQLEndPoint.getSPARQLEndPoint();
         }    
