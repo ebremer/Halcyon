@@ -15,6 +15,16 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import org.locationtech.jts.io.WKTReader;
 import org.locationtech.jts.io.WKTWriter;
+import com.ebremer.halcyon.lib.GeoSPARQL.FeatureCollection;
+import com.ebremer.halcyon.utils.HashTools;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFWriter;
+import org.apache.jena.riot.RIOT;
+import org.apache.jena.riot.system.RiotLib;
+import org.apache.jena.sparql.util.Context;
 
 public class RasterToPolygon {
 
@@ -239,6 +249,27 @@ public class RasterToPolygon {
         return null;
     }
     
+    public static void writeTurtle(String baseUri, Model model, File outputFile) throws IOException {
+        System.out.println("Writing Turtle..."+model.size()+ " triples...");
+        // Ensure parent directories exist to prevent FileNotFoundException
+        if (outputFile.getParentFile() != null) {
+            outputFile.getParentFile().mkdirs();
+        }
+        //Context context = new Context();
+        //context.setTrue(RIOT.symTurtleOmitBase);
+        
+        // Use try-with-resources to automatically close the output stream
+        try (OutputStream out = new FileOutputStream(outputFile)) {
+            RDFWriter.create()
+                .format(RDFFormat.TURTLE_PRETTY) // Specify a readable Turtle format
+                .set(RIOT.symTurtleOmitBase, true)
+          //      .context(context)
+                .base(baseUri)                  // Set the base URI for serialization
+                .source(model)                  // The model containing the RDF data
+                .output(out);                   // The output stream to write to
+        }
+    }
+    
     public static void main2(String[] args) {
         int w = 100, h = 100;
         BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
@@ -253,14 +284,131 @@ public class RasterToPolygon {
         System.out.println(wkt);
     }
 
-    public static void main(String[] args) {
-        File img = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3.png");
-        File file = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3-IHC-mask.png");
-        File out = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3-IHC-mask-out.png");
+    public static void main(String[] args) throws IOException, Exception {
+        //File img = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3.png");
+        //File file = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3-IHC-mask.png");
+        //File out = new File("D:\\utah\\phase3\\Stack1-With-IHC\\WSI\\Stack3-IHC-mask-out.png");
+        //BufferedImage bi = LoadPNG(file);
+        //List<String> wkt = RasterToPolygon.toPolygonWKTList(bi, 32);
+        //drawPolygonsAndSave(LoadPNG(img), wkt, out);
+        //drawPolygonsAndSave(bi, wkt, out);
+
+        File parent = new File("D:\\HalcyonStorage\\utah\\Stack2-With-IHC\\");
+        String title = "UTAH Image/Feature Stack 2";
+        
+        String features = "features0";
+        File file = new File(parent,"Stack0-IHC-mask.png");
         BufferedImage bi = LoadPNG(file);
         List<String> wkt = RasterToPolygon.toPolygonWKTList(bi, 32);
-        drawPolygonsAndSave(LoadPNG(img), wkt, out);
-        drawPolygonsAndSave(bi, wkt, out);
+        Model featureCollectionModel = new FeatureCollection.Builder()
+            .setRoot(features)
+            .title(title)
+            .description("Tushar provided the raw data")
+            .creator("https://orcid.org/0000-0002-9469-5266")
+            .addPublisher("https://ror.org/03r0ha626")
+            //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
+            .sourceImage(file.getName(), 10220, 8570)
+            //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
+            .setWkt(wkt)
+            .setDefaultClassification("CK818") // SNOMED code for CD3-positive T lymphocyte
+            .setDefaultProbability(1.0f)
+            .build();
+        writeTurtle(features, featureCollectionModel, new File(parent,features+".ttl"));
+        
+        features = "features1";
+        file = new File(parent,"Stack1-IHC-mask.png");
+        bi = LoadPNG(file);
+        wkt = RasterToPolygon.toPolygonWKTList(bi, 32);
+        featureCollectionModel = new FeatureCollection.Builder()
+            .setRoot(features)
+            .title(title)
+            .description("Tushar provided the raw data")
+            .creator("https://orcid.org/0000-0002-9469-5266")
+            .addPublisher("https://ror.org/03r0ha626")
+            //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
+            .sourceImage(file.getName(), 10220, 8570)
+            //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
+            .setWkt(wkt)
+            .setDefaultClassification("CDX2") // SNOMED code for CD3-positive T lymphocyte
+            .setDefaultProbability(1.0f)
+            .build();
+        writeTurtle(features, featureCollectionModel, new File(parent,features+".ttl"));
+
+        features = "features2";
+        file = new File(parent,"Stack2-IHC-mask.png");
+        bi = LoadPNG(file);
+        wkt = RasterToPolygon.toPolygonWKTList(bi, 32);
+        featureCollectionModel = new FeatureCollection.Builder()
+            .setRoot(features)
+            .title(title)
+            .description("Tushar provided the raw data")
+            .creator("https://orcid.org/0000-0002-9469-5266")
+            .addPublisher("https://ror.org/03r0ha626")
+            //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
+            .sourceImage(file.getName(), 10220, 8570)
+            //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
+            .setWkt(wkt)
+            .setDefaultClassification("EpCAM") // SNOMED code for CD3-positive T lymphocyte
+            .setDefaultProbability(1.0f)
+            .build();
+        writeTurtle(features, featureCollectionModel, new File(parent,features+".ttl"));
+        
+        features = "features3";
+        file = new File(parent,"Stack3-IHC-mask.png");
+        bi = LoadPNG(file);
+        wkt = RasterToPolygon.toPolygonWKTList(bi, 32);
+        featureCollectionModel = new FeatureCollection.Builder()
+            .setRoot(features)
+            .title(title)
+            .description("Tushar provided the raw data")
+            .creator("https://orcid.org/0000-0002-9469-5266")
+            .addPublisher("https://ror.org/03r0ha626")
+            //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
+            .sourceImage(file.getName(), 10220, 8570)
+            //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
+            .setWkt(wkt)
+            .setDefaultClassification("CD3") // SNOMED code for CD3-positive T lymphocyte
+            .setDefaultProbability(1.0f)
+            .build();
+        writeTurtle(features, featureCollectionModel, new File(parent,features+".ttl"));
+
+        features = "features4";
+        file = new File(parent,"Stack4-IHC-mask.png");
+        bi = LoadPNG(file);
+        wkt = RasterToPolygon.toPolygonWKTList(bi, 32);        
+        featureCollectionModel = new FeatureCollection.Builder()
+            .setRoot(features)
+            .title(title)
+            .description("Tushar provided the raw data")
+            .creator("https://orcid.org/0000-0002-9469-5266")
+            .addPublisher("https://ror.org/03r0ha626")
+            //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
+            .sourceImage(file.getName(), 10220, 8570)
+            //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
+            .setWkt(wkt)
+            .setDefaultClassification("CD20") // SNOMED code for CD3-positive T lymphocyte
+            .setDefaultProbability(1.0f)
+            .build();
+        writeTurtle(features, featureCollectionModel, new File(parent,features+".ttl"));
+
+        features = "features5";
+        file = new File(parent,"Stack5-IHC-mask.png");
+        bi = LoadPNG(file);
+        wkt = RasterToPolygon.toPolygonWKTList(bi, 32);        
+        featureCollectionModel = new FeatureCollection.Builder()
+            .setRoot(features)
+            .title(title)
+            .description("Tushar provided the raw data")
+            .creator("https://orcid.org/0000-0002-9469-5266")
+            .addPublisher("https://ror.org/03r0ha626")
+            //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
+            .sourceImage(file.getName(), 10220, 8570)
+            //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
+            .setWkt(wkt)
+            .setDefaultClassification("CD138CM") // SNOMED code for CD3-positive T lymphocyte
+            .setDefaultProbability(1.0f)
+            .build();
+        writeTurtle(features, featureCollectionModel, new File(parent,features+".ttl"));
         
     }    
 
