@@ -150,7 +150,7 @@ public class RDFFileReader extends AbstractFileReader {
         */
         
         URI local = URI.create("file:///D:/HalcyonStorage/utah/HnE/Stack2/stack.jsonld");
-        RDFFileReader r2 = new RDFFileReader(uri,local);
+        RDFFileReader r2 = new RDFFileReader(local,uri);
         RDFDataMgr.write(System.out, r2.getMeta(), Lang.TURTLE); 
     }
     
