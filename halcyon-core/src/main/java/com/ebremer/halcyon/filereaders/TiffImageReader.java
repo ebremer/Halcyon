@@ -62,13 +62,13 @@ public class TiffImageReader extends AbstractImageReader {
                 reader = ir;
             }
         }
-        logger.info("6 - {}",reader);
+        //logger.info("6 - {}",reader);
         if (ir==null) {
             logger.error("No reader for: {}", file);
             throw new IllegalArgumentException("No reader for: " + file);
         }
         reader.setInput(input);            
-        logger.info("7");
+        //logger.info("7");
         ImageMeta.Builder builder = ImageMeta.Builder.getBuilder(0, reader.getWidth(0), reader.getHeight(0))
             .setTileSizeX(reader.getTileWidth(0))
             .setTileSizeY(reader.getTileHeight(0));
