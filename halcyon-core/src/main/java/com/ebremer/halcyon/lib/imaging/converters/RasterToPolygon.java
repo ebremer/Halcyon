@@ -291,8 +291,8 @@ public class RasterToPolygon {
         //drawPolygonsAndSave(LoadPNG(img), wkt, out);
         //drawPolygonsAndSave(bi, wkt, out);
 
-        File parent = new File("D:\\HalcyonStorage\\utah\\Stack1-With-IHC\\");
-        String title = "UTAH Image/Feature Stack 1";
+        File parent = new File("D:\\HalcyonStorage\\utah\\Stack2-With-IHC\\");
+        String title = "UTAH Image/Feature Stack 2";
         
         String features = "features0";
         File file = new File(parent,"Stack0-IHC-mask.png");
@@ -305,7 +305,7 @@ public class RasterToPolygon {
             .creator("https://orcid.org/0000-0002-9469-5266")
             .addPublisher("https://ror.org/03r0ha626")
             //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
-            .sourceImage(file.getName(), 10220, 8570)
+            .sourceImage(file.getName(), bi.getWidth(), bi.getHeight())
             //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
             .setWkt(wkt)
             .setDefaultClassification("CK818") // SNOMED code for CD3-positive T lymphocyte
@@ -324,7 +324,7 @@ public class RasterToPolygon {
             .creator("https://orcid.org/0000-0002-9469-5266")
             .addPublisher("https://ror.org/03r0ha626")
             //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
-            .sourceImage(file.getName(), 10220, 8570)
+             .sourceImage(file.getName(), bi.getWidth(), bi.getHeight())
             //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
             .setWkt(wkt)
             .setDefaultClassification("CDX2") // SNOMED code for CD3-positive T lymphocyte
@@ -343,7 +343,7 @@ public class RasterToPolygon {
             .creator("https://orcid.org/0000-0002-9469-5266")
             .addPublisher("https://ror.org/03r0ha626")
             //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
-            .sourceImage(file.getName(), 10220, 8570)
+             .sourceImage(file.getName(), bi.getWidth(), bi.getHeight())
             //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
             .setWkt(wkt)
             .setDefaultClassification("EpCAM") // SNOMED code for CD3-positive T lymphocyte
@@ -362,7 +362,7 @@ public class RasterToPolygon {
             .creator("https://orcid.org/0000-0002-9469-5266")
             .addPublisher("https://ror.org/03r0ha626")
             //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
-            .sourceImage(file.getName(), 10220, 8570)
+             .sourceImage(file.getName(), bi.getWidth(), bi.getHeight())
             //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
             .setWkt(wkt)
             .setDefaultClassification("CD3") // SNOMED code for CD3-positive T lymphocyte
@@ -381,7 +381,7 @@ public class RasterToPolygon {
             .creator("https://orcid.org/0000-0002-9469-5266")
             .addPublisher("https://ror.org/03r0ha626")
             //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
-            .sourceImage(file.getName(), 10220, 8570)
+             .sourceImage(file.getName(), bi.getWidth(), bi.getHeight())
             //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
             .setWkt(wkt)
             .setDefaultClassification("CD20") // SNOMED code for CD3-positive T lymphocyte
@@ -400,7 +400,7 @@ public class RasterToPolygon {
             .creator("https://orcid.org/0000-0002-9469-5266")
             .addPublisher("https://ror.org/03r0ha626")
             //.sourceImage("urn:sha256:"+HashTools.GetSHA256(file), 10220, 8570)
-            .sourceImage(file.getName(), 10220, 8570)
+            .sourceImage(file.getName(), bi.getWidth(), bi.getHeight())
             //.wasGeneratedByAgent("https://github.com/SBU-BMI/quip_cnn_segmentation/releases/tag/v1.1")
             .setWkt(wkt)
             .setDefaultClassification("CD138CM") // SNOMED code for CD3-positive T lymphocyte
