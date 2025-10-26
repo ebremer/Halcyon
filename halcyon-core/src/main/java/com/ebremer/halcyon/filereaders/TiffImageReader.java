@@ -46,15 +46,15 @@ public class TiffImageReader extends AbstractImageReader {
         logger.info("TiffImageReader(URI uri, URI base) {} {}", uri, base);
         this.uri = uri;
         File file = new File(uri);
-        logger.info("2");
+        //logger.info("2");
         ImageInputStream input = ImageIO.createImageInputStream(file);
-        logger.info("3 - {}",input);
+        //logger.info("3 - {}",input);
         Iterator<javax.imageio.ImageReader> readers = ImageIO.getImageReadersByFormatName("tif");
-        logger.info("4");
-        readers = ImageIO.getImageReadersByFormatName("tif");
-        logger.info("5");
+        //logger.info("4");
+        //readers = ImageIO.getImageReadersByFormatName("tif");
+        //logger.info("5");
         javax.imageio.ImageReader ir = null;
-        logger.info("5b");
+        //logger.info("5b");
         while (readers.hasNext()) {            
             ir = readers.next();
             logger.info("Reader --> {}",ir, ir.getClass().toGenericString());
