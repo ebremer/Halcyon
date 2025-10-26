@@ -1,6 +1,5 @@
 package com.ebremer.halcyon.filereaders;
 
-import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.ns.LDP;
 import java.io.File;
@@ -13,8 +12,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFParser;
@@ -69,6 +74,21 @@ public class RDFFileReader extends AbstractFileReader {
             System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         } catch (IOException ex) {
             System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        Resource rr = m.createResource(uri.toString());
+        m = getBaseRDF(rr);
+    }
+    
+    private Model getBaseRDF(Resource r) {
+        ParameterizedSparqlString pss = new ParameterizedSparqlString(
+        """
+        construct {?s ?p ?o}
+        where {?s ?p ?o}
+        """
+        );
+        pss.setIri("s", r.toString());
+        try (QueryExecution qexec = QueryExecutionFactory.create(pss.toString(), r.getModel())) {
+            return qexec.execConstruct();
         }
     }
         
