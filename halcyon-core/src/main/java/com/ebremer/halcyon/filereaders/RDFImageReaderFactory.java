@@ -23,7 +23,7 @@ public class RDFImageReaderFactory implements FileReaderFactory {
         try {
             return new RDFImageReader(uri, base);
         } catch (IOException ex) {
-            Logger.getLogger(TiffImageReaderFactory.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(RDFImageReaderFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;        
     }
@@ -37,7 +37,7 @@ public class RDFImageReaderFactory implements FileReaderFactory {
     @Override
     public Set<String> getSupportedFormats() {
         Set<String> set = new HashSet<>();
-        set.add("jsonld");
+        //set.add("jsonld");
         set.add("ttl");
         return set;
     }

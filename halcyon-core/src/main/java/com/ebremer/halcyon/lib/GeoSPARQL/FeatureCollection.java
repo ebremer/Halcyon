@@ -249,7 +249,7 @@ public class FeatureCollection {
             model.setNsPrefix("prov", PROV_NS);
             model.setNsPrefix("rdfs", RDFS.uri);
             model.setNsPrefix("sno", SNO_NS);
-            model.setNsPrefix("so", SO_NS);
+            model.setNsPrefix("sdo", SO_NS);
             model.setNsPrefix("xsd", XSD.NS);
         }
     }

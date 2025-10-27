@@ -2,6 +2,7 @@ package com.ebremer.halcyon.filereaders;
 
 import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.ns.LDP;
+import com.ebremer.ns.PROVO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -23,6 +24,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFParser;
+import org.apache.jena.vocabulary.DC;
+import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 
 /**
@@ -33,6 +36,7 @@ public class RDFFileReader extends AbstractFileReader {
     private Model m;    
     private static final Map<String, Lang> EXT_TO_LANG = new HashMap<>();
     private Optional<PathMapper> pathMapper;
+    private Resource subject;
 
     static {
         EXT_TO_LANG.put("ttl", Lang.TURTLE);
@@ -52,10 +56,6 @@ public class RDFFileReader extends AbstractFileReader {
         return EXT_TO_LANG.get(ext);
     }
 
-    //public RDFFileReader(URI uri) {
-      //  this(uri, null);        
-    //}
-    
     public RDFFileReader(URI local, URI uri) {
         super(uri);
         m = ModelFactory.createDefaultModel();
@@ -75,21 +75,31 @@ public class RDFFileReader extends AbstractFileReader {
         } catch (IOException ex) {
             System.getLogger(RDFFileReader.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
-        Resource rr = m.createResource(uri.toString());
-        m = getBaseRDF(rr);
+        subject = m.createResource(uri.toString());
     }
     
-    private Model getBaseRDF(Resource r) {
+    public Model getBaseRDF(Resource r) {
         ParameterizedSparqlString pss = new ParameterizedSparqlString(
         """
         construct {?s ?p ?o}
-        where {?s ?p ?o}
+        where {            
+            ?s ?p ?o
+            bind(str(?p) as ?ns)
+            filter (strstarts(?ns,?prov) || strstarts(?ns,?dc) || strstarts(?ns,?rdf))
+        }
         """
         );
         pss.setIri("s", r.toString());
+        pss.setLiteral("dc", DCTerms.NS);
+        pss.setLiteral("prov", PROVO.NS);
+        pss.setLiteral("rdf", RDF.uri);
         try (QueryExecution qexec = QueryExecutionFactory.create(pss.toString(), r.getModel())) {
             return qexec.execConstruct();
         }
+    }
+    
+    public Resource getSubject() {
+        return subject;
     }
         
     public RDFFileReader(URI uri, PathMapper pm) {
