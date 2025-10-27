@@ -71,20 +71,15 @@ public class RDFImageReader extends AbstractImageReader {
         int height = 0;        
         try (QueryExecution qexec = QueryExecutionFactory.create(pss.toString(), subject.getModel())) {
             ResultSet rs = qexec.execSelect();
-
             if (rs.hasNext()) {
                 QuerySolution qs = rs.next();
                 width = qs.get("width").asLiteral().getInt();
                 height = qs.get("height").asLiteral().getInt();
             }
         }
-
         ImageMeta.Builder builder = ImageMeta.Builder.getBuilder(0, width, height)
-            .setTileSizeX(256)
-            .setTileSizeY(256);
-        for (int s=1; s<2; s++) {
-            builder.addScale(s, width, height);
-        }
+            .setTileSizeX(width)
+            .setTileSizeY(height);
         meta = builder.build(); 
     }
 
