@@ -1,5 +1,6 @@
 package com.ebremer.halcyon.lib.GeoSPARQL;
 
+import com.ebremer.ns.GEO;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -226,7 +227,7 @@ public class FeatureCollection {
         private Resource createFeature(Model model, String wkt, String classification, Literal probability) {
             // Create a blank node for the Geometry
             Resource geometry = model.createResource()
-                .addProperty(GEO_asWKT, wkt);
+                .addLiteral(GEO_asWKT, model.createTypedLiteral(wkt, GEO.wktLiteral.getURI()));
 
             // Create a blank node for the Measurement
             //Resource measurement = model.createResource()

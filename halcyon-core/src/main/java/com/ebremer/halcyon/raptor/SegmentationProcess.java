@@ -340,14 +340,14 @@ public class SegmentationProcess implements AbstractProcess {
         SeparateAnnotations(ds);
         logger.debug("Remove Crud...");
         RemoveCrud(ds.getDefaultModel());  
-        try (FileOutputStream fos = new FileOutputStream(new File("/tcga/mega.nq"))) {
-            RDFDataMgr.write(fos, ds, Lang.NQUADS);
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SegmentationProcess.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(SegmentationProcess.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.exit(0);
+        //try (FileOutputStream fos = new FileOutputStream(new File("mega.nq"))) {
+          //  RDFDataMgr.write(fos, ds, Lang.NQUADS);
+        //} catch (FileNotFoundException ex) {
+          //  java.util.logging.Logger.getLogger(SegmentationProcess.class.getName()).log(Level.SEVERE, null, ex);
+        //} catch (IOException ex) {
+//            java.util.logging.Logger.getLogger(SegmentationProcess.class.getName()).log(Level.SEVERE, null, ex);
+  //      }
+     //   System.exit(0);
         logger.debug("Analyze Dataset...");
         System.out.println("HERE AAAAAAAAAxxxxxxxxxxxxxxAAAAAAAAAAA");
         bw.Analyze(ds);

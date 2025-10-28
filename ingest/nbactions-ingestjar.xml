@@ -10,11 +10,12 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
             </goals>
             <properties>
-                <exec.vmArgs>--enable-preview -Xmx90G --add-opens=java.base/java.nio=ALL-UNNAMED</exec.vmArgs>
+                <exec.vmArgs>--enable-preview -Xmx110G --add-opens=java.base/java.nio=ALL-UNNAMED</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>-validate -src d:\tcga\src -dest d:\tcga\dest -threads 16</exec.appArgs>
+                <exec.appArgs>-src src -dest dest -threads 1</exec.appArgs>
                 <exec.mainClass>com.ebremer.halcyon.converters.Ingest</exec.mainClass>
                 <exec.executable>java</exec.executable>
+                <exec.workingdir>d:\utah\bg</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -27,12 +28,13 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
             </goals>
             <properties>
-                <exec.vmArgs>--enable-preview -Xmx90G --add-opens=java.base/java.nio=ALL-UNNAMED -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
+                <exec.vmArgs>--enable-preview -Xmx110G --add-opens=java.base/java.nio=ALL-UNNAMED -agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
-                <exec.appArgs>-validate -src d:\tcga\src -dest d:\tcga\dest -threads 16</exec.appArgs>
+                <exec.appArgs>-src src -dest dest -threads 1</exec.appArgs>
                 <exec.mainClass>com.ebremer.halcyon.converters.Ingest</exec.mainClass>
                 <exec.executable>java</exec.executable>
                 <jpda.listen>true</jpda.listen>
+                <exec.workingdir>d:\utah\bg</exec.workingdir>
             </properties>
         </action>
         <action>
@@ -45,11 +47,12 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:3.1.0:exec</goal>
             </goals>
             <properties>
-                <exec.vmArgs>--enable-preview -Xmx90G --add-opens=java.base/java.nio=ALL-UNNAMED</exec.vmArgs>
+                <exec.vmArgs>--enable-preview -Xmx110G --add-opens=java.base/java.nio=ALL-UNNAMED</exec.vmArgs>
                 <exec.args>${exec.vmArgs} -classpath %classpath ${exec.mainClass} ${exec.appArgs}</exec.args>
                 <exec.mainClass>com.ebremer.halcyon.converters.Ingest</exec.mainClass>
                 <exec.executable>java</exec.executable>
-                <exec.appArgs>-validate -src d:\tcga\src -dest d:\tcga\dest -threads 16</exec.appArgs>
+                <exec.appArgs>-src src -dest dest -threads 1</exec.appArgs>
+                <exec.workingdir>d:\utah\bg</exec.workingdir>
             </properties>
         </action>
     </actions>

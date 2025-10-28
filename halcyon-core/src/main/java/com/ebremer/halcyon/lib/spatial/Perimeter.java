@@ -5,6 +5,7 @@ import com.ebremer.ns.GEO;
 import java.util.List;
 import org.apache.jena.sparql.expr.ExprList;
 import org.apache.jena.sparql.expr.NodeValue;
+import org.apache.jena.sparql.expr.nodevalue.NodeValueNode;
 import org.apache.jena.sparql.function.FunctionBase;
 import org.locationtech.jts.geom.Polygon;
 
@@ -25,7 +26,10 @@ public class Perimeter extends FunctionBase {
         if (!nwkt.getDatatypeURI().equals(GEO.wktLiteral.getURI())) {
             throw new IllegalArgumentException("Area expects a WKT String argument "+nwkt.toString());
         }
-        String ppp = nwkt.getString();
+        String ppp = null;
+        if (nwkt instanceof NodeValueNode nnn) {
+            ppp = nnn.asString();
+        }
         if (POLYGONEMPTY.equals(ppp)) return NodeValue.makeDouble(0d);
         Polygon polygon = GeometryTools.WKT2Polygon(ppp);
         if (polygon == null) {

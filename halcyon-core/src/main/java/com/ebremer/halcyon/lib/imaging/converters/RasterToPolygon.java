@@ -291,8 +291,8 @@ public class RasterToPolygon {
         //drawPolygonsAndSave(LoadPNG(img), wkt, out);
         //drawPolygonsAndSave(bi, wkt, out);
 
-        File parent = new File("D:\\HalcyonStorage\\utah\\Stack1-With-IHC\\");
-        String title = "UTAH Image/Feature Stack 1";
+        File parent = new File("D:\\HalcyonStorage\\utah\\Stack2-With-IHC\\");
+        String title = "UTAH Image/Feature Stack 2";
         
         String features = "features0";
         File file = new File(parent,"Stack0-IHC-mask.png");
