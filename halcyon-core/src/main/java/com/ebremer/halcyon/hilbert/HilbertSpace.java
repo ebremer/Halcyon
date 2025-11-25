@@ -282,7 +282,7 @@ public final class HilbertSpace {
         return bi;
     }
     
-    public BufferedImage GetBIbyProbility(int px, int py, int width, int height, HashMap<Integer,LinkedList<Range>> ranges, HashMap<Integer,Float> values) {
+    public BufferedImage GetBIbyProbability(int px, int py, int width, int height, HashMap<Integer,LinkedList<Range>> ranges, HashMap<Integer,Float> values) {
         BufferedImage bi = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = bi.createGraphics();
         g2.setColor(new Color(128,0,128,128));
