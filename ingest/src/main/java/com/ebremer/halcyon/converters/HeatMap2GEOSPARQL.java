@@ -38,12 +38,10 @@ import org.apache.jena.riot.RDFParser;
 import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.riot.RIOT;
 import org.apache.jena.sparql.util.Context;
-import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
 import org.apache.jena.vocabulary.SchemaDO;
 import org.apache.jena.vocabulary.XSD;
-import org.slf4j.LoggerFactory;
 
 /**
  *

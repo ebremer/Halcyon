@@ -14,16 +14,13 @@ public class BooleanConverter implements IStringConverter<Boolean> {
         if (null == lowerCaseValue) {
             throw new IllegalArgumentException("Invalid boolean value: " + value);
         } else switch (lowerCaseValue) {
-            case "true":
-            case "t":
-            case "1":
+            case "true", "t", "1" -> {
                 return true;
-            case "false":
-            case "f":
-            case "0":
+            }
+            case "false", "f", "0" -> {
                 return false;
-            default:
-                throw new IllegalArgumentException("Invalid boolean value: " + value);
+            }
+            default -> throw new IllegalArgumentException("Invalid boolean value: " + value);
         }
     }
 }
