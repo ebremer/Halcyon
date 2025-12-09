@@ -4,7 +4,7 @@ import com.ebremer.halcyon.lib.OperatingSystemInfo;
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.utils.HURI;
 import com.ebremer.ns.HAL;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,7 +49,7 @@ public class INIT {
     public Resource getDefaultSettings() {
         Model m = ModelFactory.createDefaultModel();
         m.setNsPrefix("", HAL.NS);
-        m.setNsPrefix("ldp", LDP.NS);
+        m.setNsPrefix("lws", LWS.NS);
         m.setNsPrefix("xsd", XSD.NS);
         Resource r = m.createResource("http://localhost")
             .addProperty(RDF.type, HAL.HalcyonSettingsFile)
@@ -69,7 +69,7 @@ public class INIT {
         r
             .addProperty(HAL.hasResourceHandler,
                 r.getModel().createResource()
-                    .addProperty(RDF.type, LDP.Container)
+                    .addProperty(RDF.type, LWS.Container)
                     .addProperty(HAL.resourceBase, r.getModel().createResource(HURI.of(Path.of("Storage")).toString()))
                     .addProperty(HAL.urlPath, "/ldp")
             );        
@@ -81,7 +81,7 @@ public class INIT {
         r
             .addProperty(HAL.hasResourceHandler,
                 r.getModel().createResource()
-                    .addProperty(RDF.type, LDP.Container)
+                    .addProperty(RDF.type, LWS.Container)
                     .addProperty(HAL.resourceBase, r.getModel().createResource(HURI.of(Path.of("Storage")).toString()))
                     .addProperty(HAL.urlPath, "/ldp")
             );        
@@ -93,7 +93,7 @@ public class INIT {
         r
             .addProperty(HAL.hasResourceHandler,
                 r.getModel().createResource()
-                    .addProperty(RDF.type, LDP.Container)
+                    .addProperty(RDF.type, LWS.Container)
                     .addProperty(HAL.resourceBase, r.getModel().createResource(HURI.of(Path.of("Storage")).toString()))
                     .addProperty(HAL.urlPath, "/ldp")
             );        

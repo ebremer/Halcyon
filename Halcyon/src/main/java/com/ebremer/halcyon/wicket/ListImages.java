@@ -20,7 +20,7 @@ import com.ebremer.halcyon.wicket.ethereal.Zephyr2;
 import com.ebremer.halcyon.wicket.ethereal.Zephyr3;
 import com.ebremer.multiviewer.MultiViewer;
 import com.ebremer.ns.EXIF;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import com.ebremer.ns.PROVO;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -84,7 +84,7 @@ public class ListImages extends BasePage implements IPanelChangeListener {
             """
             select distinct ?s ?width ?height #?md5
             where {
-                graph ?car {?collection ldp:contains ?s}
+                graph ?car {?collection lws:contains ?s}
                 graph ?s {?s a so:ImageObject;
                             owl:sameAs ?md5;
                             exif:width ?width;
@@ -96,7 +96,7 @@ public class ListImages extends BasePage implements IPanelChangeListener {
         selected = "urn:halcyon:nocollections";
         pss.setNsPrefix("owl", OWL.NS);
         pss.setNsPrefix("hal", HAL.NS);
-        pss.setNsPrefix("ldp", LDP.NS);
+        pss.setNsPrefix("lws", LWS.NS);
         pss.setNsPrefix("so", SchemaDO.NS);
         pss.setNsPrefix("exif", EXIF.NS);
         pss.setIri("car", HAL.CollectionsAndResources.getURI());

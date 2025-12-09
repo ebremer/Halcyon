@@ -1,7 +1,7 @@
 package com.ebremer.halcyon.filereaders;
 
 import com.ebremer.halcyon.server.utils.PathMapper;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import com.ebremer.ns.PROVO;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,17 +14,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFParser;
-import org.apache.jena.vocabulary.DC;
 import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.RDF;
 
@@ -61,7 +58,7 @@ public class RDFFileReader extends AbstractFileReader {
         m = ModelFactory.createDefaultModel();
         String baseURI = uri.toString();     
         m.createResource(baseURI)
-                .addProperty(RDF.type, LDP.RDFSource);
+                .addProperty(RDF.type, LWS.DataResource);
         Lang lang = getLangFromUri(uri);
         try (FileInputStream fis = new FileInputStream(new File(local))) {
             RDFParser.create()
@@ -112,7 +109,7 @@ public class RDFFileReader extends AbstractFileReader {
         m = ModelFactory.createDefaultModel();
         String baseURI = uri.toString();     
         m.createResource(baseURI)
-                .addProperty(RDF.type, LDP.RDFSource);
+                .addProperty(RDF.type, LWS.DataResource);
         Lang lang = getLangFromUri(uri);
         URI src;
         if (pathMapper.isEmpty()) {

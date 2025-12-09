@@ -10,7 +10,7 @@ import com.ebremer.halcyon.data.DataCore;
 import com.ebremer.halcyon.datum.HalcyonFactory;
 import com.ebremer.halcyon.wicket.Upload;
 import com.ebremer.ns.HAL;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -68,12 +68,12 @@ public class Collections extends BasePage {
         pss.setCommandText("""
             select ?ContainerName ?s
             where {graph ?car {
-                ?s a ldp:Container .
+                ?s a lws:Container .
                 optional { ?s dct:title ?ContainerName}
                 }
             } order by ?s
         """);
-        pss.setNsPrefix("ldp", LDP.NS);
+        pss.setNsPrefix("lws", LWS.NS);
         pss.setNsPrefix("dct", DCTerms.NS);
         pss.setIri("car", HAL.CollectionsAndResources.getURI());
         Dataset ds = DatabaseLocator.getDatabase().getDataset();
@@ -96,14 +96,14 @@ public class Collections extends BasePage {
                 ParameterizedSparqlString pss = new ParameterizedSparqlString(
                         """
                         insert {
-                            graph ?g {?s a ldp:Container}
+                            graph ?g {?s a lws:Container}
                         }
                         where {
-                            graph ?s {?s a ldp:Container}
+                            graph ?s {?s a lws:Container}
                         }
                         """
                 );
-                pss.setNsPrefix("ldp", LDP.NS);
+                pss.setNsPrefix("lws", LWS.NS);
                 pss.setNsPrefix("so", SchemaDO.NS);
                 pss.setIri("g", HAL.CollectionsAndResources.getURI());
                 UpdateRequest updateRequest = UpdateFactory.create(pss.toString());

@@ -17,7 +17,7 @@ import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.halcyon.utils.HalJsonLD;
 import com.ebremer.ns.HAL;
 import com.ebremer.ns.IANA;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import com.ebremer.ns.SNO;
 import com.ebremer.ns.STAT;
 import jakarta.json.Json;
@@ -80,7 +80,7 @@ public class Tools {
     
     public static Model getLDPMeta(Resource r, File file) {
         r
-            .addProperty(RDF.type, LDP.NonRDFSource)
+            .addProperty(RDF.type, LWS.MetadataResource)
             .addProperty(RDF.type, IANA.JSON)
             .addProperty(RDF.type, HAL.Annotation)
             .addLiteral(STAT.mtime, file.lastModified()/1000)

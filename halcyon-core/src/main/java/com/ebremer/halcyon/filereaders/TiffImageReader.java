@@ -7,7 +7,7 @@ import com.ebremer.halcyon.lib.XMP;
 import com.ebremer.halcyon.utils.ImageTools;
 import com.ebremer.ns.EXIF;
 import com.ebremer.ns.HAL;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import com.twelvemonkeys.imageio.metadata.tiff.Rational;
 import com.twelvemonkeys.imageio.metadata.tiff.TIFF;
 import com.twelvemonkeys.imageio.plugins.tiff.TIFFImageMetadata;
@@ -123,7 +123,7 @@ public class TiffImageReader extends AbstractImageReader {
         m.setNsPrefix("hal", HAL.NS);
         m.setNsPrefix("xsd", XSD.getURI());
         Resource root = m.createResource(URITools.fix(xuri))
-            .addProperty(RDF.type, LDP.NonRDFSource)
+            .addProperty(RDF.type, LWS.MetadataResource)
             .addLiteral(HAL.filemetaversion, m.createTypedLiteral( METAVERSION, XSD.integer.getURI()))
             .addLiteral(EXIF.width, m.createTypedLiteral(meta.getWidth(), XSD.integer.getURI()))
             .addLiteral(EXIF.height, m.createTypedLiteral(meta.getHeight(), XSD.integer.getURI()))

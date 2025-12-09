@@ -2,7 +2,7 @@ package com.ebremer.halcyon.server.utils;
 
 import com.ebremer.halcyon.lib.OperatingSystemInfo;
 import com.ebremer.ns.HAL;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -263,7 +263,7 @@ public final class HalcyonSettings {
                 """
         );
         pss.setNsPrefix("", HAL.NS);
-        pss.setNsPrefix("ldp", LDP.NS);
+        pss.setNsPrefix("lws", LWS.NS);
         QueryExecution qe = QueryExecutionFactory.create(pss.toString(), m);
         ResultSet results = qe.execSelect();
         ArrayList<ResourceHandler> list = new ArrayList<>();
@@ -291,12 +291,12 @@ public final class HalcyonSettings {
         ParameterizedSparqlString pss = new ParameterizedSparqlString(
                 """
                 select distinct ?urlPath where {
-                    ?s :hasResourceHandler [ a ldp:Container; :resourceBase ?resourceBase ; :urlPath ?urlPath ]
+                    ?s :hasResourceHandler [ a lws:Container; :resourceBase ?resourceBase ; :urlPath ?urlPath ]
                 } order by ?urlPath
                 """
         );
         pss.setNsPrefix("", HAL.NS);
-        pss.setNsPrefix("ldp", LDP.NS);
+        pss.setNsPrefix("lws", LWS.NS);
         QueryExecution qe = QueryExecutionFactory.create(pss.toString(), m);
         ResultSet results = qe.execSelect().materialise();
         boolean ha = results.hasNext();

@@ -6,13 +6,12 @@ import com.ebremer.halcyon.filereaders.FileReaderFactory;
 import com.ebremer.halcyon.filereaders.FileReaderFactoryProvider;
 import com.ebremer.halcyon.filereaders.ImageReader;
 import com.ebremer.halcyon.filereaders.RDFFileReader;
-import com.ebremer.halcyon.filereaders.RDFFileReaderFactory;
 import com.ebremer.halcyon.lib.FileUtils;
 import com.ebremer.halcyon.server.utils.HalcyonSettings;
 import com.ebremer.halcyon.server.utils.PathMapper;
 import com.ebremer.halcyon.utils.HURI;
 import com.ebremer.ns.HAL;
-import com.ebremer.ns.LDP;
+import com.ebremer.ns.LWS;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -74,10 +73,9 @@ public class DirectoryProcessor {
             URI xparent = HURI.getParent(npath);
             Resource parent = m.createResource(xparent.toString());
             Resource child = m.createResource(npath.toString());
-            m.add(parent, LDP.contains, child);
+            m.add(parent, LWS.contains, child);
             m.add(parent, DCTerms.title, (new File(xparent.getPath()).getName()));
-            m.add(parent, RDF.type, LDP.BasicContainer);
-            m.add(parent, RDF.type, LDP.Container);
+            m.add(parent, RDF.type, LWS.Container);
             npath = xparent;
         }
         return m;
@@ -159,9 +157,8 @@ public class DirectoryProcessor {
                             r.addProperty(DCTerms.dateAccepted, dateLiteral);
                             r.addProperty(DCTerms.modified, dateLiteral);
                             r.addProperty(DCTerms.title, r.getLocalName());
-                            r.addLiteral(SchemaDO.contentSize, file.length());
+                            r.addLiteral(LWS.sizeInBytes, file.length());
                             r.addProperty(HAL.halcyonVersion, HalcyonSettings.VERSION);
-                            r.addLiteral(HAL.fileLastModified, file.lastModified());
                             //long now = System.nanoTime();
                             /*
                             Hashes hashes;                                    
