@@ -127,6 +127,7 @@ public class TiffImageReader extends AbstractImageReader {
             .addLiteral(HAL.filemetaversion, m.createTypedLiteral( METAVERSION, XSD.integer.getURI()))
             .addLiteral(EXIF.width, m.createTypedLiteral(meta.getWidth(), XSD.integer.getURI()))
             .addLiteral(EXIF.height, m.createTypedLiteral(meta.getHeight(), XSD.integer.getURI()))
+            .addProperty(LWS.mediaType, "image/tiff")
             .addProperty(RDF.type, SchemaDO.ImageObject);    
         TIFFImageReader rr = (TIFFImageReader) reader;        
         TIFFImageMetadata td;
